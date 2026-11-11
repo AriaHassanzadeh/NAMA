@@ -1,8 +1,48 @@
 # NAMA Analyze status
 
+## Milestone 02 — solar landing review checkpoint — 2026-11-11
+
+The user subsequently authorized frontend implementation page by page, with a review after each page. Only the solar entrance has been added for this checkpoint. Milestone 02 is in progress; do not implement Idea, Customer, Goal or Home before the user reviews this page.
+
+- Landing: http://localhost:3000/
+- Existing connection-status screen moved to http://localhost:3000/health/; both health API URLs are unchanged.
+- pgAdmin was independently rechecked: exactly one **NAMA Analyze (Docker local)** entry exists at 127.0.0.1:5433, database `nama_analyze`, user `nama`; the existing PostgreSQL 18 server entry is intact. Refresh **Servers**, then expand **NAMA Analyze (Docker local) > Databases > nama_analyze > Schemas > public > Tables**.
+- The foundation was pushed successfully: `git push --set-upstream origin work/milestone01`; local and remote commit both verified as `1364003c228fd0ff29c27546b75b3cffd80e0d2c`.
+- This frontend review checkpoint uses branch `work/milestone02-landing`.
+
+### Page changes
+
+- `frontend/src/app/page.tsx` now renders a real React solar entrance; the original diagnostic React page is preserved at `frontend/src/app/health/page.tsx`.
+- `frontend/src/components/entry/solar-entrance.tsx` and its scoped CSS reproduce the restrained flat orbital reference: three circular tracks, ten upright media marks, deterministic faint stars, the supplied red logo and local Anton/Vazirmatn/Be Vietnam fonts.
+- Theme and pause preferences persist in the entry store, separately from future workspace theme preferences. Hover/focus pauses movement; reduced-motion preferences stop all animations and disable the motion button. Theme, motion and media selection support keyboard use.
+- Start/media actions currently save the chosen entry source locally and announce the selection. Navigation to the Idea screen is intentionally not wired until that next page is built after this review; no unimplemented route or fake completed project brief is introduced.
+- `frontend/src/app/layout.tsx` loads the supplied additional fonts locally; reference files remain unchanged.
+- `scripts/browser_check.mjs` now checks `/health/`; `scripts/landing_check.mjs` adds actual Chrome interaction/layout checks. `README.md` documents both routes and checks.
+
+### Checks that passed for this checkpoint
+
+| Exact command/check | Actual result |
+| --- | --- |
+| `docker compose run --rm --no-deps frontend npm run lint` | Zero warnings/errors |
+| `docker compose run --rm --no-deps frontend npm run typecheck` | Route generation and TypeScript passed |
+| `docker compose run --rm --no-deps frontend npm run build` | Production build passed; routes `/` and `/health` generated |
+| `docker compose build frontend` | Updated frontend image built using existing locked dependencies |
+| `docker compose up -d --no-deps --wait frontend` | Frontend healthy; backend/database retained |
+| `node scripts/landing_check.mjs` | All interaction, storage, motion and viewport checks passed |
+| Viewports | 1440x1000, 1280x900, 768x1024, 390x844 and 844x390; fonts loaded, no page overflow, footer hint centered and visible |
+| Interactions | Pause/reload/resume; hover/focus pause; keyboard media selection; start confirmation without changing URL; both themes and reload persistence; reduced motion; no uncaught browser exceptions |
+| `node scripts/browser_check.mjs` | Relocated health screen still passes pending/ready/error/keyboard retry checks |
+| `python scripts/smoke_check.py` | Landing HTML/RTL/logo and direct/proxied database health still pass |
+
+Desktop, mobile and light screenshots were visually inspected against the readable solar reference. Review caught and fixed an RTL/logical-position centering issue in the footer; the final check explicitly verifies its centering at every viewport. Final artifacts: `C:\Users\Admin\AppData\Local\Temp\nama-analyze-landing-J8pA00` (outside Git).
+
+Windows/Next initially retained the old route/CSS after file moves; restarting/recreating only the frontend loaded the current source. README records the restart command for newly added routes. An automatic permission review timed out before one write and one browser check executed; smaller workspace edits and one inspected-script retry completed the work. No remaining page-0 runtime blocker.
+
+**Next action:** user reviews the solar entrance at `/`. Wait for that feedback before implementing `/start/idea`. The remaining milestone-02 flow is not claimed complete.
+
 ## Milestone 01 completed — 2026-11-11
 
-The actual Next.js/Django/PostgreSQL scaffold now runs locally in Docker Compose. Only `prompts/01-START.md` has been implemented. The solar entrance, discovery questions and Analyze Home have not been started.
+The actual Next.js/Django/PostgreSQL scaffold runs locally in Docker Compose. This section records the completed foundation before the subsequent frontend checkpoint above.
 
 User additions during this milestone were also handled: connect the existing GitHub repository, prepare the requested push on `work/milestone01`, add the database to the installed desktop pgAdmin, make `next/image` available to VS Code, and use English explanations. The application UI remains Persian RTL.
 
@@ -98,7 +138,7 @@ Production deployment and authenticated workspaces are intentionally outside thi
 
 ### Git and next task
 
-The directory initially had no `.git`. It is now connected to `https://github.com/AriaHassanzadeh/NAMA.git`, preserving the existing `main` commit/history. The milestone is on `work/milestone01`; GitHub authentication for the requested push is configured. `.env`, dependencies, build outputs and local credentials are ignored. The requested source push follows this execution record; no force push or public deployment is part of it.
+The directory initially had no `.git`. It is connected to `https://github.com/AriaHassanzadeh/NAMA.git`, preserving the existing `main` commit/history. Milestone 01 was pushed on `work/milestone01`; its local/remote commit was verified as `1364003c228fd0ff29c27546b75b3cffd80e0d2c`. `.env`, dependencies, build outputs and local credentials are ignored. No force push or public deployment occurred.
 
 Next milestone: `prompts/02-ENTRY-AND-HOME.md`, only when the user requests it. Do not begin it automatically.
 

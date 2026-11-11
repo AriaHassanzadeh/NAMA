@@ -2,7 +2,7 @@
 
 Personal Market Analyzor project. Milestone 01 provides a local Next.js + Django + PostgreSQL development foundation and a Persian RTL connection-status screen.
 
-The solar entrance, project questions and Analyze Home belong to milestone 02. The supplied `reference/` files remain design handoff material. No market records have been seeded in this milestone.
+The solar entrance is now available for the first page-by-page frontend review. Idea, Customer, Goal and Analyze Home follow after the user's review; milestone 02 is still in progress. Start actions currently save the chosen entry source and show confirmation, with no navigation to an unimplemented page. The supplied `reference/` files remain design handoff material. No market records have been seeded.
 
 ## Requirements and versions
 
@@ -34,6 +34,7 @@ The setup script generates random local credentials in ignored `.env` and preser
 Open:
 
 - Application: http://localhost:3000/
+- Connection-status screen: http://localhost:3000/health/
 - Health through Next.js: http://localhost:3000/api/v1/health/
 - Django health directly: http://localhost:8000/api/v1/health/
 
@@ -92,9 +93,10 @@ The browser check uses an installed Chrome plus Node's built-in WebSocket, with 
 
 ```powershell
 node scripts/browser_check.mjs
+node scripts/landing_check.mjs
 ```
 
-Set `CHROME_PATH` if Chrome is elsewhere. It checks pending/success/error/retry behavior, Persian RTL, local font loading and overflow at 1440 px and 390 px. Screenshots are saved outside the repository in the temporary directory printed by the script.
+Set `CHROME_PATH` if Chrome is elsewhere. The health-screen check targets `/health/`; the landing check targets `/`. They cover the corresponding interactions, RTL, fonts, responsive layout and motion preferences. Screenshots are saved outside the repository in the temporary directory printed by each script. If Next misses a newly added route on the Windows bind mount, run `docker compose restart frontend`.
 
 ## VS Code and native tools
 

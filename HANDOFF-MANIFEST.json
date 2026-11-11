@@ -1,0 +1,168 @@
+{
+  "project": "NAMA Analyze",
+  "artifact": "VS Code / Codex handoff; Next.js/Django application not implemented yet",
+  "scope": "Solar entry and three-step project discovery, then Analyze-only workspace",
+  "reference_source_commit": "76d85a22b67878d738326b126fc1f994769e7a7d",
+  "entry_flow": [
+    "solar entrance",
+    "idea",
+    "customer",
+    "goal",
+    "existing Analyze Home"
+  ],
+  "entry_flow_guide": "docs/USER-FLOW.md",
+  "first_task": "prompts/01-START.md",
+  "second_task": "prompts/02-ENTRY-AND-HOME.md",
+  "figma_file": "https://www.figma.com/design/pUpoTIp8ZmLQYmCg1l0YWQ",
+  "figma_entry_update": "Four raw captured entry frames added to the existing Design file; service completion confirmed, native layer inspection quota-blocked",
+  "products_corrected_frame": "17:2",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "bytes": 124,
+      "sha256": "402fe42771d580fa2f431bc3f41bae7f8c0dff118636f7aaeee5f0b122f8bfb7"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 246,
+      "sha256": "5e481340c13822f2e392ffa4a37af3a7022867169177d22a464efabc68db5caa"
+    },
+    {
+      "path": "AGENTS.md",
+      "bytes": 5314,
+      "sha256": "81fe3e696d1c7b1ed7ea2cf0e9cd978c7b7b555f4f07e947d4beedd8cef25452"
+    },
+    {
+      "path": "README-FA.md",
+      "bytes": 4001,
+      "sha256": "3f7741236183cf66a11d7b5c76323ffc6e419923816cd568e70e899a90a9093b"
+    },
+    {
+      "path": "docs/DESIGN.md",
+      "bytes": 5473,
+      "sha256": "7149220c1dc63d6272b00009d5fe0b1f8201f4efd47c8465af87db54e07ac659"
+    },
+    {
+      "path": "docs/PROJECT.md",
+      "bytes": 4510,
+      "sha256": "79e3a8325ed1d460ab8b0d3a5b2c7b060d263d52f5b62454718b5ddef20cdb71"
+    },
+    {
+      "path": "docs/ROADMAP.md",
+      "bytes": 2229,
+      "sha256": "4f7bd1931df5f734d8303c9bd85da552cb5023cf63b418ae4ef54687d3cdebda"
+    },
+    {
+      "path": "docs/STATUS.md",
+      "bytes": 1518,
+      "sha256": "b799080416552eb77481a2f27b3e4494bcd8b95facfb6b99d375045a86f76805"
+    },
+    {
+      "path": "docs/USER-FLOW.md",
+      "bytes": 3248,
+      "sha256": "959a163f590364b1fa6e946310c86cab844cf2c80ea82c5cbd680b653ece7cd4"
+    },
+    {
+      "path": "prompts/01-START.md",
+      "bytes": 5395,
+      "sha256": "40dec3d52566718d7627a68c7f712e166a4b20f54dd3629387c31debe98a276e"
+    },
+    {
+      "path": "prompts/02-ENTRY-AND-HOME.md",
+      "bytes": 3160,
+      "sha256": "c61023e0bf510901b9a7a91dcce64040ce757977d2ca9a2cfae94bf515a41089"
+    },
+    {
+      "path": "reference/NAMA-Analyze-Design.html",
+      "bytes": 1912833,
+      "sha256": "b580aab92b42ec142ce58beeeeadad389a18e755b3c2a8f3e380e9cf48e40e7d"
+    },
+    {
+      "path": "reference/NAMA-Products-Layout-Fixed.html",
+      "bytes": 4465210,
+      "sha256": "0f1dbc0b4d3d334158411464ee5eee8915e03b49b6be60cd5dbcb4b4033126c1"
+    },
+    {
+      "path": "reference/demo/analyze/app.css",
+      "bytes": 42645,
+      "sha256": "fb1f804533ac4878084f9d1a8e6d7ec5519233387e11328c1cdcda1c1ac7703f"
+    },
+    {
+      "path": "reference/demo/analyze/app.js",
+      "bytes": 72125,
+      "sha256": "de76ad856aa4006a5099d9dd28142f595af77895ff0bdbdf10ac8dc3b66b8096"
+    },
+    {
+      "path": "reference/demo/analyze/data.js",
+      "bytes": 10542,
+      "sha256": "ee721a342261f7b7f4d80a051197b1e784fdd8f2bfdbdf08b7eb4ffb2e6aaedf"
+    },
+    {
+      "path": "reference/demo/analyze/entry.css",
+      "bytes": 20026,
+      "sha256": "c37186af0f918f98fed6c75806ee56906c6bb7873d7d6bf7fcbd721b498509b3"
+    },
+    {
+      "path": "reference/demo/analyze/entry.js",
+      "bytes": 21486,
+      "sha256": "ed58d57560399b20d8aafd764382ba6129d86300a2dedb93f440f0ae2456ebd2"
+    },
+    {
+      "path": "reference/demo/assets/analyze/ads-reference.jpg",
+      "bytes": 273060,
+      "sha256": "145f3a7a4e15eb1665eb9d4b0d41906e5bd51017cc6e94a9af9c4326ea77cfe4"
+    },
+    {
+      "path": "reference/demo/assets/analyze/products-reference.jpg",
+      "bytes": 242015,
+      "sha256": "aa5cff3b1e50b1cd2a2a6d0413b294d24181dfa839b5fe5ba52486fad82b4b39"
+    },
+    {
+      "path": "reference/demo/assets/anton.ttf",
+      "bytes": 170812,
+      "sha256": "a4ba3a92350ebb031da0cb47630ac49eb265082ca1bc0450442f4a83ab947cab"
+    },
+    {
+      "path": "reference/demo/assets/atelier.jpg",
+      "bytes": 205831,
+      "sha256": "6376315a449c4409b0ac967e19e62fa155b496a6a00811f00be7999fec3b642e"
+    },
+    {
+      "path": "reference/demo/assets/be-vietnam-pro-600.ttf",
+      "bytes": 135420,
+      "sha256": "d548458f437a4afe267b4fc515069214f861c9f990afc3ce54e4001e8e4d97b7"
+    },
+    {
+      "path": "reference/demo/assets/fashion.jpg",
+      "bytes": 95227,
+      "sha256": "78b325000c479a4a073d13f4f38063e9c0133328e7047817b876f48adb1fc117"
+    },
+    {
+      "path": "reference/demo/assets/mark.svg",
+      "bytes": 950,
+      "sha256": "0a50f9d82a34615d33cafcd7aaf1b09a312201fbc96f478e5743b053dd9b095e"
+    },
+    {
+      "path": "reference/demo/assets/vazirmatn.woff2",
+      "bytes": 111152,
+      "sha256": "4e3fa217d38fdafc1fea4414ceb58ca5e662cf0ab5fa735a8c8c20e8b42cad92"
+    },
+    {
+      "path": "reference/demo/assets/wardrobe.jpg",
+      "bytes": 72913,
+      "sha256": "de696aec029766c43e2ed8a1e1d12ea04e034e4d748f56e1ceeb421065c3f0c1"
+    },
+    {
+      "path": "reference/demo/index.html",
+      "bytes": 1352,
+      "sha256": "3252c0ba55b0dc1cfeb35fd2e63ddc37907459bd42840e2c0365086ef077c0f5"
+    }
+  ],
+  "figma_entry_nodes": {
+    "solar": "21:2",
+    "idea": "22:2",
+    "customer": "23:2",
+    "goal": "24:2",
+    "home_existing": "2:2"
+  }
+}

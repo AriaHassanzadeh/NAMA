@@ -1,0 +1,43 @@
+/* All commercial metrics and business records in this design demo are illustrative. */
+window.NAMA_ANALYZE_DATA=(()=>{
+ const media={
+  wellness:{src:'assets/analyze/ads-reference.jpg',sw:1911,sh:861,x:381,y:287,w:336,h:336},
+  home:{src:'assets/analyze/ads-reference.jpg',sw:1911,sh:861,x:765,y:287,w:336,h:336},
+  care:{src:'assets/analyze/ads-reference.jpg',sw:1911,sh:861,x:1147,y:287,w:336,h:336},
+  razor:{src:'assets/analyze/ads-reference.jpg',sw:1911,sh:861,x:1529,y:287,w:336,h:336},
+  bottle:{src:'assets/analyze/products-reference.jpg',sw:1915,sh:859,x:404,y:207,w:217,h:217},
+  scrubber:{src:'assets/analyze/products-reference.jpg',sw:1915,sh:859,x:372,y:485,w:258,h:274},
+  fashion:{src:'assets/fashion.jpg'},wardrobe:{src:'assets/wardrobe.jpg'},atelier:{src:'assets/atelier.jpg'}
+ };
+ const shops=[
+  {id:'s1',name:'Nord & Co.',domain:'nord.example',initial:'N',color:'#e9e1d6',category:'سبک زندگی',country:'کانادا',flag:'🇨🇦',revenue:4280,visits:28400,growth:62.2,active:70,total:190,products:12,created:'2026-07-22',media:['bottle','fashion','wardrobe'],trend:[8,10,9,12,14,18,21,26,37,48,63,78]},
+  {id:'s2',name:'Mellow Home',domain:'mellow.example',initial:'m',color:'#e2e8df',category:'خانه و آشپزخانه',country:'آمریکا',flag:'🇺🇸',revenue:3160,visits:21700,growth:48.5,active:160,total:308,products:24,created:'2026-09-24',media:['home','scrubber','care'],trend:[12,14,13,16,22,24,21,32,43,49,62,70]},
+  {id:'s3',name:'Everyday Studio',domain:'everyday.example',initial:'e',color:'#eee0df',category:'مد و پوشاک',country:'انگلستان',flag:'🇬🇧',revenue:5610,visits:42300,growth:83.4,active:192,total:1100,products:38,created:'2026-08-04',media:['fashion','wardrobe','atelier'],trend:[9,11,15,14,23,25,39,45,53,65,79,94]},
+  {id:'s4',name:'Luma Care',domain:'luma.example',initial:'L',color:'#e2e2ee',category:'زیبایی و سلامت',country:'فرانسه',flag:'🇫🇷',revenue:2140,visits:18600,growth:37.2,active:54,total:178,products:9,created:'2026-05-27',media:['care','wellness','razor'],trend:[16,12,18,21,19,28,32,35,41,48,54,61]},
+  {id:'s5',name:'Aeryon',domain:'aeryon.example',initial:'A',color:'#dce8eb',category:'زیبایی و سلامت',country:'آلمان',flag:'🇩🇪',revenue:6480,visits:61700,growth:112.6,active:627,total:1300,products:16,created:'2026-09-17',media:['razor','wellness','care'],trend:[6,9,8,11,16,14,23,31,49,61,76,98]},
+  {id:'s6',name:'Form Objects',domain:'form.example',initial:'f',color:'#e8e4dc',category:'سبک زندگی',country:'کانادا',flag:'🇨🇦',revenue:1820,visits:13200,growth:26.8,active:29,total:72,products:7,created:'2026-10-03',media:['bottle','home','scrubber'],trend:[20,18,23,22,28,27,32,34,39,44,49,56]}
+ ];
+ const products=[
+  {id:'p1',name:'بطری استیل Everyday 750',english:'EVERYDAY BOTTLE',shop:'s1',media:'bottle',price:48,active:20,category:'سبک زندگی',published:'2026-10-28',growth:63.2,description:'طراحی ساده، عایق دوجداره و یک پیام روشن: همراه هر روز.'},
+  {id:'p2',name:'برس چرخشی Everything',english:'EVERYTHING SCRUBBER',shop:'s2',media:'scrubber',price:44,active:170,category:'خانه و آشپزخانه',published:'2026-10-22',growth:48.5,description:'نمایش کاربرد محصول در چند ثانیه؛ نمونه‌ای از تبلیغ مسئله و راه‌حل.'},
+  {id:'p3',name:'کالکشن مینیمال پاییز',english:'THE EVERYDAY EDIT',shop:'s3',media:'fashion',price:89,active:48,category:'مد و پوشاک',published:'2026-10-19',growth:83.4,description:'روایت یک انتخاب ماندگار، با تمرکز بر بافت و کاربرد روزمره.'},
+  {id:'p4',name:'کیت مراقبت روزانه',english:'A DAILY RESET',shop:'s4',media:'care',price:36,active:54,category:'زیبایی و سلامت',published:'2026-10-17',growth:37.2,description:'یک روتین کوتاه و یک مزیت قابل فهم برای مخاطب اولیه.'},
+  {id:'p5',name:'ماشین اصلاح Flow',english:'FLOW GROOMING',shop:'s5',media:'razor',price:59,active:114,category:'زیبایی و سلامت',published:'2026-10-12',growth:112.6,description:'نمای نزدیک محصول و نمایش تجربهٔ استفاده در قالب ویدیویی.'},
+  {id:'p6',name:'کپسول کمد آگاهانه',english:'THE CONSCIOUS EDIT',shop:'s3',media:'wardrobe',price:128,active:72,category:'مد و پوشاک',published:'2026-10-09',growth:56.8,description:'مقایسهٔ ترکیب‌ها و کاربرد یک لباس در موقعیت‌های مختلف.'},
+  {id:'p7',name:'خوشبوکنندهٔ Mellow',english:'MAKE ROOM FOR CALM',shop:'s2',media:'home',price:32,active:57,category:'خانه و آشپزخانه',published:'2026-10-05',growth:42.1,description:'روایت فضایی از تجربهٔ محصول؛ مناسب بررسی زاویهٔ پیام تبلیغ.'},
+  {id:'p8',name:'ست سفر Form',english:'MADE TO GO',shop:'s6',media:'bottle',price:64,active:29,category:'سبک زندگی',published:'2026-10-02',growth:26.8,description:'پیام کاربردی محصول، با تأکید بر سادگی و حمل آسان.'}
+ ];
+ const ads=[
+  {id:'a1',title:'یک تغییر کوچک، در روتین هر روز',shop:'s5',product:'p5',media:'wellness',platform:'Meta',country:'آلمان',format:'ویدیو',category:'زیبایی و سلامت',active:77,reach:171900,likes:6600,spend:1590,roas:4.11,ctr:3.21,variants:25,copy:'از تجربهٔ روزمره شروع کن. یک کاربرد مشخص، یک نتیجهٔ روشن و دعوت به آشنایی با محصول.',tags:['نمایش کاربرد','مسئله و راه‌حل'],trend:[9,12,11,19,23,29,34,41,39,52,66,81]},
+  {id:'a2',title:'خانه، جایی برای آرام‌تر شدن',shop:'s2',product:'p7',media:'home',platform:'Meta',country:'آمریکا',format:'ویدیو',category:'خانه و آشپزخانه',active:59,reach:98400,likes:2300,spend:1120,roas:3.86,ctr:2.94,variants:7,copy:'یک لحظهٔ ساده از زندگی واقعی؛ تجربهٔ محصول را قبل از ویژگی‌های آن نشان بده.',tags:['روایت تجربه','UGC'],trend:[12,17,13,23,20,27,38,35,43,51,58,68]},
+  {id:'a3',title:'یک عادت ساده، با جزئیات بهتر',shop:'s4',product:'p4',media:'care',platform:'TikTok',country:'فرانسه',format:'تصویر',category:'زیبایی و سلامت',active:36,reach:76400,likes:1800,spend:840,roas:3.42,ctr:2.78,variants:4,copy:'تصویر نزدیک، زمینهٔ واقعی و مزیتی که در یک نگاه قابل تشخیص است.',tags:['نمای نزدیک','نمایش کاربرد'],trend:[6,10,14,12,16,20,19,29,35,39,47,56]},
+  {id:'a4',title:'روتینت را دوباره تعریف کن',shop:'s5',product:'p5',media:'razor',platform:'Meta',country:'آلمان',format:'ویدیو',category:'زیبایی و سلامت',active:44,reach:218300,likes:8700,spend:2180,roas:4.36,ctr:3.58,variants:12,copy:'جزئیات واقعی محصول در استفادهٔ روزانه. پیام کوتاه و نمایش روشن عملکرد.',tags:['نمایش محصول','UGC'],trend:[8,9,15,20,18,27,34,44,53,61,78,94]},
+  {id:'a5',title:'استایل روزمره، روایت تازه',shop:'s3',product:'p3',media:'fashion',platform:'Meta',country:'انگلستان',format:'تصویر',category:'مد و پوشاک',active:62,reach:164800,likes:5900,spend:1740,roas:4.02,ctr:3.38,variants:8,copy:'کمتر، اما بهتر. یک انتخاب آگاهانه برای روزهایی که شبیه خودت زندگی می‌کنی.',tags:['ادیتوریال','روایت برند'],trend:[15,18,17,25,27,35,39,45,54,60,73,85]},
+  {id:'a6',title:'همراه هر روز، هر مسیر',shop:'s1',product:'p1',media:'bottle',platform:'Meta',country:'کانادا',format:'تصویر',category:'سبک زندگی',active:28,reach:84200,likes:2600,spend:920,roas:3.91,ctr:3.07,variants:5,copy:'از مسیر کوتاه صبح تا سفر آخر هفته. ساده طراحی شده، برای همراهی هر روز.',tags:['محصول‌محور','مینیمال'],trend:[10,13,17,15,22,26,34,33,41,47,59,71]},
+  {id:'a7',title:'کمتر، اما بهتر',shop:'s3',product:'p6',media:'wardrobe',platform:'TikTok',country:'انگلستان',format:'تصویر',category:'مد و پوشاک',active:19,reach:63200,likes:3100,spend:680,roas:3.74,ctr:2.87,variants:3,copy:'یک کمد کوچک‌تر، انتخاب‌های بیشتر. ترکیب‌هایی که برای زندگی واقعی طراحی شده‌اند.',tags:['کلاژ','مقایسه'],trend:[12,15,17,24,23,30,29,38,41,46,53,63]},
+  {id:'a8',title:'از ایده تا جزئیات',shop:'s3',product:'p3',media:'atelier',platform:'YouTube',country:'انگلستان',format:'ویدیو',category:'مد و پوشاک',active:31,reach:116400,likes:4200,spend:1230,roas:3.62,ctr:3.12,variants:6,copy:'پشت هر انتخاب، یک داستان است. کیفیت را از نزدیک ببین و مسیر ساخت را دنبال کن.',tags:['پشت صحنه','روایت برند'],trend:[9,12,11,17,24,22,31,37,44,51,58,70]},
+  {id:'a9',title:'راه‌حل ساده برای خانه',shop:'s2',product:'p2',media:'scrubber',platform:'Meta',country:'آمریکا',format:'تصویر',category:'خانه و آشپزخانه',active:51,reach:132600,likes:5100,spend:1460,roas:4.18,ctr:3.44,variants:11,copy:'از یک کار تکراری، یک تجربهٔ ساده‌تر بساز. کاربرد محصول، در مرکز روایت.',tags:['قبل و بعد','مسئله و راه‌حل'],trend:[6,10,15,12,20,26,35,41,50,59,74,86]},
+  {id:'a10',title:'برای رفتن، برای همراهی',shop:'s6',product:'p8',media:'bottle',platform:'TikTok',country:'کانادا',format:'تصویر',category:'سبک زندگی',active:12,reach:42800,likes:1400,spend:470,roas:3.28,ctr:2.63,variants:2,copy:'یک محصول ساده برای یک نیاز روشن. روایت کوتاه، قاب تمیز و تمرکز روی کاربرد.',tags:['مینیمال','سبک زندگی'],trend:[12,14,18,17,24,28,25,34,39,43,51,58]}
+ ];
+ return {media,shops,products,ads,categories:['مد و پوشاک','خانه و آشپزخانه','زیبایی و سلامت','سبک زندگی'],countries:['کانادا','آمریکا','انگلستان','فرانسه','آلمان']};
+})();

@@ -1,0 +1,12 @@
+@import "tailwindcss";
+@theme inline {
+  --font-sans: var(--font-vazirmatn);
+  --color-primary: #e12c35;
+}
+:root { color-scheme: light; }
+body { margin: 0; background: #f8f9fb; color: #191722; font-family: var(--font-vazirmatn), sans-serif; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+button:disabled { cursor: wait; }
+:focus-visible { outline: 3px solid #e12c35; outline-offset: 4px; }
+::selection { background: #fff0f1; color: #191722; }

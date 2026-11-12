@@ -5,6 +5,7 @@
 The user approved continuing after the landing, then explicitly requested the database and APIs across the Analyze pages before further frontend implementation. This supersedes the earlier page-order checkpoint below. The next Idea page has not been implemented. Explanations are in English at the user's request; the application remains Persian RTL.
 
 - Branch: `work/database-demo-api`, including the preserved landing work and the merge of `origin/main` after the user's PR #1 merge.
+- Git delivery: `git push --set-upstream origin work/database-demo-api` passed. Local and remote checkpoint commit were both verified as `48930908ae085e694e51c0d1df40a7db5d11c5db`; only personal `.vscode/` remained untracked. This status delivery note is a subsequent documentation commit.
 - Application: http://localhost:3000/ — solar entrance remains available.
 - Interactive API explorer: http://localhost:3000/api/v1/docs/
 - OpenAPI: http://localhost:3000/api/v1/schema/

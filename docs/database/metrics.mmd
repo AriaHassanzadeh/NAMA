@@ -1,0 +1,62 @@
+erDiagram
+    direction LR
+    marketShopmetrics["market_shopmetrics"] {
+        int8 id PK
+        varchar source_kind "max 16"
+        varchar source_reference "max 500"
+        date observed_on "nullable"
+        timestamptz imported_at
+        varchar value_kind "max 16"
+        varchar currency "max 3"
+        numeric daily_revenue_estimate_amount "nullable"
+        int8 monthly_visits_count "nullable"
+        numeric growth_30d_percent "nullable"
+        int4 active_ads_count "nullable"
+        int4 total_ads_count "nullable"
+        int4 reported_products_count "nullable"
+        jsonb trend
+        uuid shop_id FK
+    }
+    marketProductmetrics["market_productmetrics"] {
+        int8 id PK
+        varchar source_kind "max 16"
+        varchar source_reference "max 500"
+        date observed_on "nullable"
+        timestamptz imported_at
+        varchar value_kind "max 16"
+        varchar currency "max 3"
+        numeric price_amount "nullable"
+        int4 active_ads_count "nullable"
+        numeric growth_percent "nullable"
+        uuid product_id FK
+    }
+    marketAdmetrics["market_admetrics"] {
+        int8 id PK
+        varchar source_kind "max 16"
+        varchar source_reference "max 500"
+        date observed_on "nullable"
+        timestamptz imported_at
+        varchar value_kind "max 16"
+        varchar currency "max 3"
+        int4 active_days "nullable"
+        int8 reach_count "nullable"
+        int8 likes_count "nullable"
+        numeric spend_amount "nullable"
+        numeric roas_ratio "nullable"
+        numeric ctr_percent "nullable"
+        int4 variant_count "nullable"
+        jsonb trend
+        uuid ad_id FK
+    }
+    marketAd["market_ad"] {
+        uuid id PK
+    }
+    marketProduct["market_product"] {
+        uuid id PK
+    }
+    marketShop["market_shop"] {
+        uuid id PK
+    }
+    marketAd ||--o{ marketAdmetrics : "ad_id"
+    marketProduct ||--o{ marketProductmetrics : "product_id"
+    marketShop ||--o{ marketShopmetrics : "shop_id"

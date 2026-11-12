@@ -74,7 +74,7 @@ try {
   await send("Runtime.enable");
   await send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false });
   await send("Fetch.enable", { patterns: [{ urlPattern: "*/api/v1/health/*", requestStage: "Request" }] });
-  await send("Page.navigate", { url: process.env.APP_ORIGIN ?? "http://127.0.0.1:3000/" });
+  await send("Page.navigate", { url: process.env.APP_ORIGIN ?? "http://127.0.0.1:3000/health/" });
     try { await waitFor(() => heldRequest, "client health request"); } catch (error) {
     console.log("Browser errors:", pageErrors);
     console.log("Browser state:", await evaluate("({ ready: document.readyState, status: document.querySelector('[role=status]')?.textContent, scripts: [...document.scripts].filter(s=>s.src).map(s=>s.src), resources: performance.getEntriesByType('resource').map(r=>({url:r.name, size:r.transferSize})) })"));

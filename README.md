@@ -2,7 +2,7 @@
 
 Personal Market Analyzor project. Milestone 01 provides a local Next.js + Django + PostgreSQL development foundation and a Persian RTL connection-status screen.
 
-The solar entrance, project questions and Analyze Home belong to milestone 02. The supplied `reference/` files remain design handoff material. No market records have been seeded in this milestone.
+The solar entrance remains available. At the user's request, work moved to the database and demo APIs before the next frontend pages. The database now contains labelled sample records; see [API documentation](docs/API.md) and [actual database diagrams/columns](docs/DATABASE.md). Idea, Customer, Goal and Analyze Home resume after this backend review. Start actions currently save the chosen entry source and show confirmation. The supplied `reference/` files remain design handoff material.
 
 ## Requirements and versions
 
@@ -27,6 +27,7 @@ Run from this project directory:
 python scripts/setup_env.py
 docker compose config --quiet
 docker compose up -d --build --wait
+docker compose exec -T backend python manage.py seed_demo
 ```
 
 The setup script generates random local credentials in ignored `.env` and preserves an existing file. `.env.example` documents every setting with placeholders. The backend applies committed migrations before starting; the custom `accounts.User` exists in its initial migration.
@@ -34,8 +35,11 @@ The setup script generates random local credentials in ignored `.env` and preser
 Open:
 
 - Application: http://localhost:3000/
+- Connection-status screen: http://localhost:3000/health/
 - Health through Next.js: http://localhost:3000/api/v1/health/
 - Django health directly: http://localhost:8000/api/v1/health/
+- API explorer: http://localhost:3000/api/v1/docs/
+- OpenAPI: http://localhost:3000/api/v1/schema/
 
 All published ports bind to `127.0.0.1`. PostgreSQL is available to desktop clients at `127.0.0.1:5433`, database `nama_analyze`, user `nama`. The password stays in `.env`. Port 5433 avoids the PostgreSQL 18 instance already installed on this machine.
 
@@ -71,13 +75,14 @@ Run against the started stack:
 docker compose config --quiet
 docker compose exec -T backend python manage.py check
 docker compose exec -T backend python manage.py makemigrations --check --dry-run
-docker compose exec -T backend python manage.py test health --verbosity 2
+docker compose exec -T backend python manage.py test --verbosity 1
 docker compose exec -T backend pip check
 docker compose run --rm --no-deps frontend npm run lint
 docker compose run --rm --no-deps frontend npm run typecheck
 docker compose run --rm --no-deps frontend npm run build
 docker compose run --rm --no-deps frontend npm audit
 python scripts/smoke_check.py
+python scripts/api_smoke_check.py
 ```
 
 Run the optional outage check only when a brief interruption of this local database is acceptable:
@@ -92,11 +97,21 @@ The browser check uses an installed Chrome plus Node's built-in WebSocket, with 
 
 ```powershell
 node scripts/browser_check.mjs
+node scripts/landing_check.mjs
 ```
 
-Set `CHROME_PATH` if Chrome is elsewhere. It checks pending/success/error/retry behavior, Persian RTL, local font loading and overflow at 1440 px and 390 px. Screenshots are saved outside the repository in the temporary directory printed by the script.
+Set `CHROME_PATH` if Chrome is elsewhere. The health-screen check targets `/health/`; the landing check targets `/`. They cover the corresponding interactions, RTL, fonts, responsive layout and motion preferences. Screenshots are saved outside the repository in the temporary directory printed by each script. If Next misses a newly added route on the Windows bind mount, run `docker compose restart frontend`.
 
 ## VS Code and native tools
+
+For backend import resolution, create/select an isolated editor environment:
+
+```powershell
+python -m venv backend/.venv
+backend/.venv/Scripts/python.exe -m pip install -r backend/requirements.txt
+```
+
+In VS Code use **Python: Select Interpreter** and choose `backend/.venv/Scripts/python.exe`; reload the window if Pylance cached the old interpreter. This machine's environment was created with Windows Python 3.14 and verified for Django/DRF imports. The application and all backend behavior checks continue to use Docker Python 3.13. Existing personal `.vscode` settings are preserved locally and are not committed.
 
 Open the repository root. `next/image` is supplied by the `next` package; it has no separate installation. To make frontend dependencies/types available to VS Code, use Node 24.22.2 locally and run:
 

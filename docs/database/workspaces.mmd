@@ -1,0 +1,95 @@
+erDiagram
+    direction LR
+    accountsUser["accounts_user"] {
+        int8 id PK
+        varchar password "max 128"
+        timestamptz last_login "nullable"
+        bool is_superuser
+        varchar username UK "max 150"
+        varchar first_name "max 150"
+        varchar last_name "max 150"
+        varchar email "max 254"
+        bool is_staff
+        bool is_active
+        timestamptz date_joined
+    }
+    workspacesWorkspace["workspaces_workspace"] {
+        uuid id PK
+        timestamptz created_at
+        timestamptz updated_at
+        varchar name "max 160"
+        int8 owner_id FK
+    }
+    workspacesProjectbrief["workspaces_projectbrief"] {
+        uuid id PK
+        timestamptz created_at
+        timestamptz updated_at
+        text idea
+        text customer_description
+        varchar audience "max 16"
+        varchar market "max 120"
+        varchar budget_band "max 120"
+        varchar goal "max 16"
+        text goal_note
+        timestamptz completed_at "nullable"
+        uuid workspace_id FK, UK
+    }
+    workspacesSavedad["workspaces_savedad"] {
+        uuid id PK
+        timestamptz created_at
+        timestamptz updated_at
+        uuid ad_id FK
+        uuid workspace_id FK
+    }
+    workspacesSavedproduct["workspaces_savedproduct"] {
+        uuid id PK
+        timestamptz created_at
+        timestamptz updated_at
+        uuid product_id FK
+        uuid workspace_id FK
+    }
+    workspacesSavedshop["workspaces_savedshop"] {
+        uuid id PK
+        timestamptz created_at
+        timestamptz updated_at
+        uuid shop_id FK
+        uuid workspace_id FK
+    }
+    workspacesShopwatch["workspaces_shopwatch"] {
+        uuid id PK
+        timestamptz created_at
+        timestamptz updated_at
+        bool enabled
+        uuid shop_id FK
+        uuid workspace_id FK
+    }
+    workspacesSavedreport["workspaces_savedreport"] {
+        uuid id PK
+        timestamptz created_at
+        timestamptz updated_at
+        varchar name "max 160"
+        varchar report_type "max 16"
+        int2 period_days
+        jsonb filters
+        uuid workspace_id FK
+    }
+    marketAd["market_ad"] {
+        uuid id PK
+    }
+    marketProduct["market_product"] {
+        uuid id PK
+    }
+    marketShop["market_shop"] {
+        uuid id PK
+    }
+    workspacesWorkspace ||--o| workspacesProjectbrief : "workspace_id"
+    marketAd ||--o{ workspacesSavedad : "ad_id"
+    workspacesWorkspace ||--o{ workspacesSavedad : "workspace_id"
+    marketProduct ||--o{ workspacesSavedproduct : "product_id"
+    workspacesWorkspace ||--o{ workspacesSavedproduct : "workspace_id"
+    workspacesWorkspace ||--o{ workspacesSavedreport : "workspace_id"
+    marketShop ||--o{ workspacesSavedshop : "shop_id"
+    workspacesWorkspace ||--o{ workspacesSavedshop : "workspace_id"
+    marketShop ||--o{ workspacesShopwatch : "shop_id"
+    workspacesWorkspace ||--o{ workspacesShopwatch : "workspace_id"
+    accountsUser ||--o{ workspacesWorkspace : "owner_id"

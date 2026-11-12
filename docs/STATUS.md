@@ -1,5 +1,72 @@
 # NAMA Analyze status
 
+## Database and demo API review checkpoint — 2026-11-12
+
+The user approved continuing after the landing, then explicitly requested the database and APIs across the Analyze pages before further frontend implementation. This supersedes the earlier page-order checkpoint below. The next Idea page has not been implemented. Explanations are in English at the user's request; the application remains Persian RTL.
+
+- Branch: `work/database-demo-api`, including the preserved landing work and the merge of `origin/main` after the user's PR #1 merge.
+- Application: http://localhost:3000/ — solar entrance remains available.
+- Interactive API explorer: http://localhost:3000/api/v1/docs/
+- OpenAPI: http://localhost:3000/api/v1/schema/
+- Actual PostgreSQL columns, constraints and three relationship diagrams: [DATABASE.md](DATABASE.md). Complete metadata covers 29 physical tables, including Django framework tables; no business rows or credentials are exported.
+- Endpoint behavior, filters, units and session testing: [API.md](API.md).
+- Desktop pgAdmin connection remains **NAMA Analyze (Docker local)** at `127.0.0.1:5433`. Refresh its `nama_analyze > Schemas > public > Tables` node to see the new tables. The existing PostgreSQL 18 server and the persistent project volume were preserved.
+
+### Implemented files and behavior
+
+- `backend/market/`: catalog models, initial migration, admin registration, original-reference fixture, idempotent `seed_demo`, validated read-only APIs, serializers, filters and behavior tests. The migrated database contains 6 demo shops, 8 products, 10 ads and 9 media definitions. Repeating the seed preserves IDs and unrelated manual records/snapshots; collisions roll back.
+- Shop → Product → Ad foreign keys preserve the supplied relationships; an ad derives its shop through its product. Categories, countries, tags and media are normalized. Metric snapshots retain provenance, illustrative value kind, explicit USD units and nullable observation dates. Reported source totals remain separate from actual related-record counts.
+- Public APIs cover list/detail/search/filter/order/pagination, related ads/products, ad comparison, CSV export, Home selections, filter options and report summaries. Undated trends retain ordinal indices; reports explicitly return `period_filter_applied=false`. Data is labelled demo, not live or verified market information. Relative pagination links and same-origin image paths were checked.
+- `backend/workspaces/`: owned workspace/project-brief models, typed saved ads/products/shops, shop-watch preferences and saved report definitions, migration, APIs and ownership tests. Foreign workspace/report IDs return 404. Brief edits invalidate prior completion. Report filters use the catalog validators. Watches store preferences only.
+- `backend/accounts/api.py`, `tests.py`: session login/logout/current-user/CSRF endpoints, protected unsafe requests, login throttling and tests. There is no seeded/shared account or authentication UI. `API.md` explains local `createsuperuser` and the CSRF token rotation flow.
+- `backend/demo/`: three explicitly labelled mock idea examples for the later entry form; no new frontend page was introduced.
+- `backend/config/`, `backend/requirements.txt`: registered apps/routes, drf-spectacular 0.30.0 and sidecar 2026.10.1 with a pinned dependency closure, local Swagger assets, explicit API contracts and CSRF header documentation. The validated schema has 31 paths.
+- `docs/api/openapi.json`, `frontend/src/lib/api/generated.d.ts`: validated schema and generated frontend types. The generator uses an isolated pinned TypeScript 5.9.3 tool environment because its peer range excludes the application's TypeScript 6.0.2; the app version is unchanged.
+- `frontend/next.config.mjs`: an explicit static-file rewrite before the API rewrite makes locally bundled Swagger assets work through port 3000. `frontend/public/demo-assets/` contains copies of the supplied image assets; references remain unchanged.
+- `backend/market/management/commands/export_database_schema.py`, `scripts/export_database_schema.py`, `docs/database/`, `docs/DATABASE.md`: actual PostgreSQL introspection and reproducible catalog, metrics and workspace ERDs with all application columns and constraints.
+- `scripts/api_smoke_check.py`, `README.md`, `docs/API.md`, this status entry: tested local URLs, setup/check commands, editor instructions and scope. Frontend package formatting and npm lockfile placement metadata were retained; direct dependency versions are unchanged.
+
+### Editor import issue resolved
+
+Docker already contained Django and DRF. VS Code was using the host Python without those dependencies. Created ignored `backend/.venv` with the existing Windows Python 3.14, installed the pinned requirements and verified every import the user reported, including `AbstractUser`, `SimpleRateThrottle`, `APIView`, Django test utilities and `APIClient`. Django was initialized for imports that require configured settings. An initial standalone import probe without Django settings failed with `ImproperlyConfigured`; the initialized probe passed. Docker Python 3.13 remains the application runtime.
+
+Existing personal `.vscode/settings.json` was preserved, adding only missing Python interpreter/backend-analysis-path settings. `.vscode/` and `.venv/` are not committed. If Pylance retains old errors, select `backend/.venv/Scripts/python.exe` using **Python: Select Interpreter**, then **Developer: Reload Window**. No source-import backslashes or Python syntax error were found in the actual backend files.
+
+### Checks that passed
+
+| Exact command/check | Actual result |
+| --- | --- |
+| `docker compose exec -T backend python manage.py makemigrations market workspaces --no-header` | Generated the two committed initial application migrations |
+| `docker compose exec -T backend python manage.py migrate --noinput` | Both migrations applied; subsequent check found no pending migrations |
+| `docker compose exec -T backend python manage.py seed_demo` | Repeatable 6 shops / 8 products / 10 ads / 9 media assets |
+| `docker compose exec -T backend python manage.py check` | No issues |
+| `docker compose exec -T backend python manage.py test --verbosity 1` | Final run: all 36 tests passed against PostgreSQL; temporary test database removed |
+| `docker compose exec -T backend python manage.py makemigrations --check --dry-run` | No model drift |
+| `docker compose exec -T backend pip check` | No broken requirements |
+| `docker compose exec -T backend python manage.py spectacular --file /tmp/nama-openapi.json --format openapi-json --validate --fail-on-warn` | Validated schema with zero warnings/errors; 31 paths |
+| `npm.cmd exec --yes --package=openapi-typescript@7.13.0 --package=typescript@5.9.3 -- openapi-typescript docs/api/openapi.json --output frontend/src/lib/api/generated.d.ts` | Generated the frontend contract types |
+| `python scripts/export_database_schema.py` | Exported 29 actual PostgreSQL tables and three ERDs |
+| `docker compose build` | Both updated images built with locked dependencies |
+| `docker compose up -d --wait` | Frontend, backend and database healthy |
+| `python scripts/api_smoke_check.py` | Same-origin catalog list/detail/CSV/provenance, image, Home/options/report APIs, anonymous private-resource rejection, schema/CSRF documentation and local Swagger assets passed |
+| `python scripts/smoke_check.py` | Direct/proxied real-database health plus landing HTML/RTL/logo passed |
+| `docker compose run --rm --no-deps frontend npm run lint` | Zero warnings/errors |
+| `docker compose run --rm --no-deps frontend npm run typecheck` | Passed, including generated API types |
+| `docker compose run --rm --no-deps frontend npm run build` | Passed; existing `/` and `/health` routes generated |
+| `docker compose run --rm --no-deps frontend npm audit` | Zero reported vulnerabilities |
+| `backend/.venv/Scripts/python.exe -m pip check` and initialized local import probe | No broken requirements; all reported Django/DRF imports resolved |
+| `git diff --check` | Passed |
+
+The final regression run caught an old test expectation containing an extra image subdirectory after the served asset paths were flattened. Corrected the expectation to the actual path already verified over HTTP, then all 36 tests passed. Swagger static assets initially returned 404 through the generic slash rewrite; the explicit static-file rewrite fixed that integration and the final smoke check passed.
+
+### Limits and next action
+
+The repository ERDs and column/constraint lists are complete. Optional FigJam generation did not create a file because its tool required a team/organization selection in the widget; no paid plan or subscription was selected. The local/GitHub Mermaid diagrams are available without that external step.
+
+No new UI page was added or visually reviewed in this backend checkpoint. CSV/manual imports, real providers, production deployment and authentication screens remain later work. Login throttling currently uses the development process cache. The previously documented ESLint deprecation/override limitation remains. A proposed manifest cleanup using `git restore` was rejected by automatic approval review because it could discard uncommitted changes; the files were preserved and the tested versions retained. No database flush, volume removal, force push or public deployment occurred.
+
+**Next action:** user reviews the database diagrams/columns and demo APIs, then resumes the Idea frontend page. Continue one page at a time and request review after each completed page; do not build the remaining frontend pages before that review.
+
 ## Milestone 02 — solar landing review checkpoint — 2026-11-11
 
 The user subsequently authorized frontend implementation page by page, with a review after each page. Only the solar entrance has been added for this checkpoint. Milestone 02 is in progress; do not implement Idea, Customer, Goal or Home before the user reviews this page.

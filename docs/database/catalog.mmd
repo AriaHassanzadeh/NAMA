@@ -1,0 +1,97 @@
+erDiagram
+    direction LR
+    marketCategory["market_category"] {
+        varchar slug PK "max 80"
+        varchar label "max 120"
+    }
+    marketCountry["market_country"] {
+        varchar code PK "max 2"
+        varchar label "max 120"
+        varchar flag "max 8"
+    }
+    marketMediaasset["market_mediaasset"] {
+        varchar key PK "max 80"
+        varchar path "max 500"
+        int4 source_width "nullable"
+        int4 source_height "nullable"
+        int4 crop_x "nullable"
+        int4 crop_y "nullable"
+        int4 crop_width "nullable"
+        int4 crop_height "nullable"
+        varchar media_kind "max 12"
+        varchar video_url "nullable; max 500"
+    }
+    marketShop["market_shop"] {
+        varchar source_kind "max 16"
+        varchar source_reference "max 500"
+        date observed_on "nullable"
+        timestamptz imported_at
+        uuid id PK
+        varchar external_id "max 100"
+        varchar name "max 200"
+        varchar domain UK "max 253"
+        varchar initial "max 8"
+        varchar color "max 7"
+        date created_on "nullable"
+        varchar category_id FK "max 80"
+        varchar country_id FK "max 2"
+    }
+    marketProduct["market_product"] {
+        varchar source_kind "max 16"
+        varchar source_reference "max 500"
+        date observed_on "nullable"
+        timestamptz imported_at
+        uuid id PK
+        varchar external_id "max 100"
+        varchar name "max 200"
+        varchar english_name "max 200"
+        text description
+        date published_on "nullable"
+        varchar category_id FK "max 80"
+        varchar primary_media_id FK "nullable; max 80"
+        uuid shop_id FK
+    }
+    marketAd["market_ad"] {
+        varchar source_kind "max 16"
+        varchar source_reference "max 500"
+        date observed_on "nullable"
+        timestamptz imported_at
+        uuid id PK
+        varchar external_id "max 100"
+        varchar platform "max 16"
+        varchar format "max 12"
+        varchar title "max 250"
+        text copy
+        varchar category_id FK "max 80"
+        varchar country_id FK "max 2"
+        varchar primary_media_id FK "nullable; max 80"
+        uuid product_id FK
+    }
+    marketTag["market_tag"] {
+        varchar slug PK "max 100"
+        varchar label "max 120"
+    }
+    marketAdTags["market_ad_tags"] {
+        int8 id PK
+        uuid ad_id FK
+        varchar tag_id FK "max 100"
+    }
+    marketShopmedia["market_shopmedia"] {
+        int8 id PK
+        int4 position
+        varchar media_id FK "max 80"
+        uuid shop_id FK
+    }
+    marketCategory ||--o{ marketAd : "category_id"
+    marketCountry ||--o{ marketAd : "country_id"
+    marketMediaasset |o..o{ marketAd : "primary_media_id"
+    marketProduct ||--o{ marketAd : "product_id"
+    marketAd ||--o{ marketAdTags : "ad_id"
+    marketTag ||--o{ marketAdTags : "tag_id"
+    marketCategory ||--o{ marketProduct : "category_id"
+    marketMediaasset |o..o{ marketProduct : "primary_media_id"
+    marketShop ||--o{ marketProduct : "shop_id"
+    marketCategory ||--o{ marketShop : "category_id"
+    marketCountry ||--o{ marketShop : "country_id"
+    marketMediaasset ||--o{ marketShopmedia : "media_id"
+    marketShop ||--o{ marketShopmedia : "shop_id"

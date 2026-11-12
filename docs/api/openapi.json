@@ -1,0 +1,4530 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "NAMA Analyze Demo API",
+        "version": "0.3.0",
+        "description": "Labelled illustrative data, not verified market intelligence. Private workspace operations use Django sessions and CSRF."
+    },
+    "paths": {
+        "/api/v1/{kind}/export/": {
+            "get": {
+                "operationId": "export_retrieve",
+                "description": "Demo-only CSV, with explicit USD/provenance columns; maximum 1000 records.",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "kind",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "export"
+                ],
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "text/csv": {
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/ads/": {
+            "get": {
+                "operationId": "ads_list",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "category",
+                        "schema": {
+                            "enum": [
+                                "fashion",
+                                "home-kitchen",
+                                "beauty-health",
+                                "lifestyle"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `fashion` - fashion\n* `home-kitchen` - home-kitchen\n* `beauty-health` - beauty-health\n* `lifestyle` - lifestyle"
+                    },
+                    {
+                        "in": "query",
+                        "name": "country",
+                        "schema": {
+                            "enum": [
+                                "CA",
+                                "US",
+                                "GB",
+                                "FR",
+                                "DE"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `CA` - CA\n* `US` - US\n* `GB` - GB\n* `FR` - FR\n* `DE` - DE"
+                    },
+                    {
+                        "in": "query",
+                        "name": "format",
+                        "schema": {
+                            "enum": [
+                                "image",
+                                "video"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `image` - image\n* `video` - video"
+                    },
+                    {
+                        "in": "query",
+                        "name": "min_active_days",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 36500,
+                            "minimum": 0
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "ordering",
+                        "schema": {
+                            "enum": [
+                                "-reach",
+                                "-roas",
+                                "-active_days",
+                                "active_days"
+                            ],
+                            "type": "string",
+                            "default": "-reach",
+                            "minLength": 1
+                        },
+                        "description": "* `-reach` - -reach\n* `-roas` - -roas\n* `-active_days` - -active_days\n* `active_days` - active_days"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 1000000,
+                            "minimum": 1,
+                            "default": 1
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "default": 12
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "platform",
+                        "schema": {
+                            "enum": [
+                                "meta",
+                                "tiktok",
+                                "youtube"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `meta` - meta\n* `tiktok` - tiktok\n* `youtube` - youtube"
+                    },
+                    {
+                        "in": "query",
+                        "name": "product",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "search",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 200
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "shop",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "source_kind",
+                        "schema": {
+                            "enum": [
+                                "demo"
+                            ],
+                            "type": "string",
+                            "default": "demo",
+                            "minLength": 1
+                        },
+                        "description": "* `demo` - demo"
+                    }
+                ],
+                "tags": [
+                    "ads"
+                ],
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaginatedAdList"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/ads/{id}/": {
+            "get": {
+                "operationId": "ads_retrieve",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^[0-9a-fA-F-]{36}$"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "ads"
+                ],
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Ad"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/ads/compare/": {
+            "get": {
+                "operationId": "ads_compare_list",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "ids",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 150,
+                            "minLength": 1
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "ads"
+                ],
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Ad"
+                                    }
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/csrf/": {
+            "get": {
+                "operationId": "auth_csrf_retrieve",
+                "tags": [
+                    "auth"
+                ],
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CSRFToken"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/login/": {
+            "post": {
+                "operationId": "auth_login_create",
+                "description": "Fetch /auth/csrf/ first and send X-CSRFToken. Django rotates the session/CSRF token on login.",
+                "tags": [
+                    "auth"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Login"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Login"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Login"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SessionLoginResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "X-CSRFToken",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Use csrfToken from /auth/csrf/ with its cookie; login rotates it and returns the next token."
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/logout/": {
+            "post": {
+                "operationId": "auth_logout_create",
+                "tags": [
+                    "auth"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No response body"
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "X-CSRFToken",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Use csrfToken from /auth/csrf/ with its cookie; login rotates it and returns the next token."
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/me/": {
+            "get": {
+                "operationId": "auth_me_retrieve",
+                "tags": [
+                    "auth"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SessionIdentity"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/demo/entry-options/": {
+            "get": {
+                "operationId": "demo_entry_options_retrieve",
+                "description": "Fictional starter ideas; this endpoint performs no market research.",
+                "tags": [
+                    "demo"
+                ],
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/EntryOptionsResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/filter-options/": {
+            "get": {
+                "operationId": "filter_options_retrieve",
+                "tags": [
+                    "filter-options"
+                ],
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FilterOptions"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/health/": {
+            "get": {
+                "operationId": "health_retrieve",
+                "tags": [
+                    "health"
+                ],
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HealthResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    },
+                    "503": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HealthResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/home/": {
+            "get": {
+                "operationId": "home_retrieve",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "category",
+                        "schema": {
+                            "enum": [
+                                "fashion",
+                                "home-kitchen",
+                                "beauty-health",
+                                "lifestyle"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `fashion` - fashion\n* `home-kitchen` - home-kitchen\n* `beauty-health` - beauty-health\n* `lifestyle` - lifestyle"
+                    },
+                    {
+                        "in": "query",
+                        "name": "country",
+                        "schema": {
+                            "enum": [
+                                "CA",
+                                "US",
+                                "GB",
+                                "FR",
+                                "DE"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `CA` - CA\n* `US` - US\n* `GB` - GB\n* `FR` - FR\n* `DE` - DE"
+                    },
+                    {
+                        "in": "query",
+                        "name": "focus",
+                        "schema": {
+                            "enum": [
+                                "ads",
+                                "products",
+                                "shops"
+                            ],
+                            "type": "string",
+                            "default": "ads",
+                            "minLength": 1
+                        },
+                        "description": "* `ads` - ads\n* `products` - products\n* `shops` - shops"
+                    },
+                    {
+                        "in": "query",
+                        "name": "period_days",
+                        "schema": {
+                            "enum": [
+                                7,
+                                30,
+                                90
+                            ],
+                            "type": "integer",
+                            "default": 30
+                        },
+                        "description": "* `7` - 7\n* `30` - 30\n* `90` - 90"
+                    },
+                    {
+                        "in": "query",
+                        "name": "selection_index",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 9,
+                            "minimum": 0,
+                            "default": 0
+                        }
+                    }
+                ],
+                "tags": [
+                    "home"
+                ],
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HomeResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/products/": {
+            "get": {
+                "operationId": "products_list",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "category",
+                        "schema": {
+                            "enum": [
+                                "fashion",
+                                "home-kitchen",
+                                "beauty-health",
+                                "lifestyle"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `fashion` - fashion\n* `home-kitchen` - home-kitchen\n* `beauty-health` - beauty-health\n* `lifestyle` - lifestyle"
+                    },
+                    {
+                        "in": "query",
+                        "name": "country",
+                        "schema": {
+                            "enum": [
+                                "CA",
+                                "US",
+                                "GB",
+                                "FR",
+                                "DE"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `CA` - CA\n* `US` - US\n* `GB` - GB\n* `FR` - FR\n* `DE` - DE"
+                    },
+                    {
+                        "in": "query",
+                        "name": "max_price",
+                        "schema": {
+                            "type": "string",
+                            "format": "decimal",
+                            "pattern": "^-?\\d{0,14}(?:\\.\\d{0,2})?$"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "min_active_ads",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "one_per_shop",
+                        "schema": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "ordering",
+                        "schema": {
+                            "enum": [
+                                "-growth",
+                                "price",
+                                "-active_ads",
+                                "-published_on"
+                            ],
+                            "type": "string",
+                            "default": "-published_on",
+                            "minLength": 1
+                        },
+                        "description": "* `-growth` - -growth\n* `price` - price\n* `-active_ads` - -active_ads\n* `-published_on` - -published_on"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 1000000,
+                            "minimum": 1,
+                            "default": 1
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "default": 12
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "search",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 200
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "shop",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "source_kind",
+                        "schema": {
+                            "enum": [
+                                "demo"
+                            ],
+                            "type": "string",
+                            "default": "demo",
+                            "minLength": 1
+                        },
+                        "description": "* `demo` - demo"
+                    }
+                ],
+                "tags": [
+                    "products"
+                ],
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaginatedProductList"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/products/{id}/": {
+            "get": {
+                "operationId": "products_retrieve",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^[0-9a-fA-F-]{36}$"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "products"
+                ],
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Product"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/products/{product_id}/ads/": {
+            "get": {
+                "operationId": "products_ads_list",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "category",
+                        "schema": {
+                            "enum": [
+                                "fashion",
+                                "home-kitchen",
+                                "beauty-health",
+                                "lifestyle"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `fashion` - fashion\n* `home-kitchen` - home-kitchen\n* `beauty-health` - beauty-health\n* `lifestyle` - lifestyle"
+                    },
+                    {
+                        "in": "query",
+                        "name": "country",
+                        "schema": {
+                            "enum": [
+                                "CA",
+                                "US",
+                                "GB",
+                                "FR",
+                                "DE"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `CA` - CA\n* `US` - US\n* `GB` - GB\n* `FR` - FR\n* `DE` - DE"
+                    },
+                    {
+                        "in": "query",
+                        "name": "format",
+                        "schema": {
+                            "enum": [
+                                "image",
+                                "video"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `image` - image\n* `video` - video"
+                    },
+                    {
+                        "in": "query",
+                        "name": "min_active_days",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 36500,
+                            "minimum": 0
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "ordering",
+                        "schema": {
+                            "enum": [
+                                "-reach",
+                                "-roas",
+                                "-active_days",
+                                "active_days"
+                            ],
+                            "type": "string",
+                            "default": "-reach",
+                            "minLength": 1
+                        },
+                        "description": "* `-reach` - -reach\n* `-roas` - -roas\n* `-active_days` - -active_days\n* `active_days` - active_days"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 1000000,
+                            "minimum": 1,
+                            "default": 1
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "default": 12
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "platform",
+                        "schema": {
+                            "enum": [
+                                "meta",
+                                "tiktok",
+                                "youtube"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `meta` - meta\n* `tiktok` - tiktok\n* `youtube` - youtube"
+                    },
+                    {
+                        "in": "query",
+                        "name": "product",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "product_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "search",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 200
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "shop",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "source_kind",
+                        "schema": {
+                            "enum": [
+                                "demo"
+                            ],
+                            "type": "string",
+                            "default": "demo",
+                            "minLength": 1
+                        },
+                        "description": "* `demo` - demo"
+                    }
+                ],
+                "tags": [
+                    "products"
+                ],
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaginatedAdList"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/reports/overview/": {
+            "get": {
+                "operationId": "reports_overview_retrieve",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "category",
+                        "schema": {
+                            "enum": [
+                                "fashion",
+                                "home-kitchen",
+                                "beauty-health",
+                                "lifestyle"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `fashion` - fashion\n* `home-kitchen` - home-kitchen\n* `beauty-health` - beauty-health\n* `lifestyle` - lifestyle"
+                    },
+                    {
+                        "in": "query",
+                        "name": "country",
+                        "schema": {
+                            "enum": [
+                                "CA",
+                                "US",
+                                "GB",
+                                "FR",
+                                "DE"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `CA` - CA\n* `US` - US\n* `GB` - GB\n* `FR` - FR\n* `DE` - DE"
+                    },
+                    {
+                        "in": "query",
+                        "name": "focus",
+                        "schema": {
+                            "enum": [
+                                "ads",
+                                "products",
+                                "shops"
+                            ],
+                            "type": "string",
+                            "default": "ads",
+                            "minLength": 1
+                        },
+                        "description": "* `ads` - ads\n* `products` - products\n* `shops` - shops"
+                    },
+                    {
+                        "in": "query",
+                        "name": "period_days",
+                        "schema": {
+                            "enum": [
+                                7,
+                                30,
+                                90
+                            ],
+                            "type": "integer",
+                            "default": 30
+                        },
+                        "description": "* `7` - 7\n* `30` - 30\n* `90` - 90"
+                    }
+                ],
+                "tags": [
+                    "reports"
+                ],
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReportResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/shops/": {
+            "get": {
+                "operationId": "shops_list",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "category",
+                        "schema": {
+                            "enum": [
+                                "fashion",
+                                "home-kitchen",
+                                "beauty-health",
+                                "lifestyle"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `fashion` - fashion\n* `home-kitchen` - home-kitchen\n* `beauty-health` - beauty-health\n* `lifestyle` - lifestyle"
+                    },
+                    {
+                        "in": "query",
+                        "name": "country",
+                        "schema": {
+                            "enum": [
+                                "CA",
+                                "US",
+                                "GB",
+                                "FR",
+                                "DE"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `CA` - CA\n* `US` - US\n* `GB` - GB\n* `FR` - FR\n* `DE` - DE"
+                    },
+                    {
+                        "in": "query",
+                        "name": "min_active_ads",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "min_daily_revenue",
+                        "schema": {
+                            "type": "string",
+                            "format": "decimal",
+                            "pattern": "^-?\\d{0,14}(?:\\.\\d{0,2})?$"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "min_growth",
+                        "schema": {
+                            "type": "string",
+                            "format": "decimal",
+                            "pattern": "^-?\\d{0,8}(?:\\.\\d{0,2})?$"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "ordering",
+                        "schema": {
+                            "enum": [
+                                "-growth",
+                                "-revenue",
+                                "-visits",
+                                "-active_ads"
+                            ],
+                            "type": "string",
+                            "default": "-growth",
+                            "minLength": 1
+                        },
+                        "description": "* `-growth` - -growth\n* `-revenue` - -revenue\n* `-visits` - -visits\n* `-active_ads` - -active_ads"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 1000000,
+                            "minimum": 1,
+                            "default": 1
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "default": 12
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "search",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 200
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "source_kind",
+                        "schema": {
+                            "enum": [
+                                "demo"
+                            ],
+                            "type": "string",
+                            "default": "demo",
+                            "minLength": 1
+                        },
+                        "description": "* `demo` - demo"
+                    }
+                ],
+                "tags": [
+                    "shops"
+                ],
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaginatedShopList"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/shops/{id}/": {
+            "get": {
+                "operationId": "shops_retrieve",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "string",
+                            "pattern": "^[0-9a-fA-F-]{36}$"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "shops"
+                ],
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Shop"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/shops/{shop_id}/ads/": {
+            "get": {
+                "operationId": "shops_ads_list",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "category",
+                        "schema": {
+                            "enum": [
+                                "fashion",
+                                "home-kitchen",
+                                "beauty-health",
+                                "lifestyle"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `fashion` - fashion\n* `home-kitchen` - home-kitchen\n* `beauty-health` - beauty-health\n* `lifestyle` - lifestyle"
+                    },
+                    {
+                        "in": "query",
+                        "name": "country",
+                        "schema": {
+                            "enum": [
+                                "CA",
+                                "US",
+                                "GB",
+                                "FR",
+                                "DE"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `CA` - CA\n* `US` - US\n* `GB` - GB\n* `FR` - FR\n* `DE` - DE"
+                    },
+                    {
+                        "in": "query",
+                        "name": "format",
+                        "schema": {
+                            "enum": [
+                                "image",
+                                "video"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `image` - image\n* `video` - video"
+                    },
+                    {
+                        "in": "query",
+                        "name": "min_active_days",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 36500,
+                            "minimum": 0
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "ordering",
+                        "schema": {
+                            "enum": [
+                                "-reach",
+                                "-roas",
+                                "-active_days",
+                                "active_days"
+                            ],
+                            "type": "string",
+                            "default": "-reach",
+                            "minLength": 1
+                        },
+                        "description": "* `-reach` - -reach\n* `-roas` - -roas\n* `-active_days` - -active_days\n* `active_days` - active_days"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 1000000,
+                            "minimum": 1,
+                            "default": 1
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "default": 12
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "platform",
+                        "schema": {
+                            "enum": [
+                                "meta",
+                                "tiktok",
+                                "youtube"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `meta` - meta\n* `tiktok` - tiktok\n* `youtube` - youtube"
+                    },
+                    {
+                        "in": "query",
+                        "name": "product",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "search",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 200
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "shop",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "shop_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "source_kind",
+                        "schema": {
+                            "enum": [
+                                "demo"
+                            ],
+                            "type": "string",
+                            "default": "demo",
+                            "minLength": 1
+                        },
+                        "description": "* `demo` - demo"
+                    }
+                ],
+                "tags": [
+                    "shops"
+                ],
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaginatedAdList"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/shops/{shop_id}/products/": {
+            "get": {
+                "operationId": "shops_products_list",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "category",
+                        "schema": {
+                            "enum": [
+                                "fashion",
+                                "home-kitchen",
+                                "beauty-health",
+                                "lifestyle"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `fashion` - fashion\n* `home-kitchen` - home-kitchen\n* `beauty-health` - beauty-health\n* `lifestyle` - lifestyle"
+                    },
+                    {
+                        "in": "query",
+                        "name": "country",
+                        "schema": {
+                            "enum": [
+                                "CA",
+                                "US",
+                                "GB",
+                                "FR",
+                                "DE"
+                            ],
+                            "type": "string",
+                            "minLength": 1
+                        },
+                        "description": "* `CA` - CA\n* `US` - US\n* `GB` - GB\n* `FR` - FR\n* `DE` - DE"
+                    },
+                    {
+                        "in": "query",
+                        "name": "max_price",
+                        "schema": {
+                            "type": "string",
+                            "format": "decimal",
+                            "pattern": "^-?\\d{0,14}(?:\\.\\d{0,2})?$"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "min_active_ads",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 0
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "one_per_shop",
+                        "schema": {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "ordering",
+                        "schema": {
+                            "enum": [
+                                "-growth",
+                                "price",
+                                "-active_ads",
+                                "-published_on"
+                            ],
+                            "type": "string",
+                            "default": "-published_on",
+                            "minLength": 1
+                        },
+                        "description": "* `-growth` - -growth\n* `price` - price\n* `-active_ads` - -active_ads\n* `-published_on` - -published_on"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 1000000,
+                            "minimum": 1,
+                            "default": 1
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 100,
+                            "minimum": 1,
+                            "default": 12
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "search",
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 200
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "shop",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "shop_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "source_kind",
+                        "schema": {
+                            "enum": [
+                                "demo"
+                            ],
+                            "type": "string",
+                            "default": "demo",
+                            "minLength": 1
+                        },
+                        "description": "* `demo` - demo"
+                    }
+                ],
+                "tags": [
+                    "shops"
+                ],
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PaginatedProductList"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/workspaces/": {
+            "get": {
+                "operationId": "workspaces_list",
+                "tags": [
+                    "workspaces"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Workspace"
+                                    }
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "post": {
+                "operationId": "workspaces_create",
+                "tags": [
+                    "workspaces"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Workspace"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Workspace"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Workspace"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Workspace"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "X-CSRFToken",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Use csrfToken from /auth/csrf/ with its cookie; login rotates it and returns the next token."
+                    }
+                ]
+            }
+        },
+        "/api/v1/workspaces/{workspace_id}/": {
+            "get": {
+                "operationId": "workspaces_retrieve",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "workspace_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "workspaces"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Workspace"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "patch": {
+                "operationId": "workspaces_partial_update",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "workspace_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "name": "X-CSRFToken",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Use csrfToken from /auth/csrf/ with its cookie; login rotates it and returns the next token."
+                    }
+                ],
+                "tags": [
+                    "workspaces"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatchedWorkspace"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatchedWorkspace"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatchedWorkspace"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Workspace"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "workspaces_destroy",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "workspace_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "name": "X-CSRFToken",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Use csrfToken from /auth/csrf/ with its cookie; login rotates it and returns the next token."
+                    }
+                ],
+                "tags": [
+                    "workspaces"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No response body"
+                    }
+                }
+            }
+        },
+        "/api/v1/workspaces/{workspace_id}/brief/": {
+            "get": {
+                "operationId": "workspaces_brief_retrieve",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "workspace_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "workspaces"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProjectBrief"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "patch": {
+                "operationId": "workspaces_brief_partial_update",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "workspace_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "name": "X-CSRFToken",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Use csrfToken from /auth/csrf/ with its cookie; login rotates it and returns the next token."
+                    }
+                ],
+                "tags": [
+                    "workspaces"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatchedProjectBrief"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatchedProjectBrief"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatchedProjectBrief"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProjectBrief"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/workspaces/{workspace_id}/brief/complete/": {
+            "post": {
+                "operationId": "workspaces_brief_complete_create",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "workspace_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "name": "X-CSRFToken",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Use csrfToken from /auth/csrf/ with its cookie; login rotates it and returns the next token."
+                    }
+                ],
+                "tags": [
+                    "workspaces"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProjectBrief"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProjectBrief"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ProjectBrief"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ProjectBrief"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/workspaces/{workspace_id}/reports/": {
+            "get": {
+                "operationId": "workspaces_reports_list",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "workspace_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "workspaces"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SavedReport"
+                                    }
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "post": {
+                "operationId": "workspaces_reports_create",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "workspace_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "name": "X-CSRFToken",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Use csrfToken from /auth/csrf/ with its cookie; login rotates it and returns the next token."
+                    }
+                ],
+                "tags": [
+                    "workspaces"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SavedReport"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SavedReport"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SavedReport"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SavedReport"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/workspaces/{workspace_id}/reports/{report_id}/": {
+            "get": {
+                "operationId": "workspaces_reports_retrieve",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "report_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "path",
+                        "name": "workspace_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "workspaces"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SavedReport"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "patch": {
+                "operationId": "workspaces_reports_partial_update",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "report_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "path",
+                        "name": "workspace_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "name": "X-CSRFToken",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Use csrfToken from /auth/csrf/ with its cookie; login rotates it and returns the next token."
+                    }
+                ],
+                "tags": [
+                    "workspaces"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatchedSavedReport"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatchedSavedReport"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PatchedSavedReport"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SavedReport"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "workspaces_reports_destroy",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "report_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "path",
+                        "name": "workspace_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "name": "X-CSRFToken",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Use csrfToken from /auth/csrf/ with its cookie; login rotates it and returns the next token."
+                    }
+                ],
+                "tags": [
+                    "workspaces"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No response body"
+                    }
+                }
+            }
+        },
+        "/api/v1/workspaces/{workspace_id}/reports/{report_id}/run/": {
+            "get": {
+                "operationId": "workspaces_reports_run_retrieve",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "report_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "path",
+                        "name": "workspace_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "workspaces"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ReportResponse"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/workspaces/{workspace_id}/saved/{kind}/": {
+            "get": {
+                "operationId": "workspaces_saved_retrieve",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "kind",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ads",
+                                "products",
+                                "shops"
+                            ]
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "path",
+                        "name": "workspace_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "workspaces"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BookmarkList"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/v1/workspaces/{workspace_id}/saved/{kind}/{target_id}/": {
+            "put": {
+                "operationId": "workspaces_saved_update",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "kind",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ads",
+                                "products",
+                                "shops"
+                            ]
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "path",
+                        "name": "target_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "path",
+                        "name": "workspace_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "name": "X-CSRFToken",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Use csrfToken from /auth/csrf/ with its cookie; login rotates it and returns the next token."
+                    }
+                ],
+                "tags": [
+                    "workspaces"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BookmarkRecord"
+                                }
+                            }
+                        },
+                        "description": ""
+                    },
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/BookmarkRecord"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "workspaces_saved_destroy",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "kind",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ads",
+                                "products",
+                                "shops"
+                            ]
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "path",
+                        "name": "target_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "path",
+                        "name": "workspace_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "name": "X-CSRFToken",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Use csrfToken from /auth/csrf/ with its cookie; login rotates it and returns the next token."
+                    }
+                ],
+                "tags": [
+                    "workspaces"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No response body"
+                    }
+                }
+            }
+        },
+        "/api/v1/workspaces/{workspace_id}/shops/{shop_id}/watch/": {
+            "put": {
+                "operationId": "workspaces_shops_watch_update",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "shop_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "path",
+                        "name": "workspace_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "name": "X-CSRFToken",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Use csrfToken from /auth/csrf/ with its cookie; login rotates it and returns the next token."
+                    }
+                ],
+                "tags": [
+                    "workspaces"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ShopWatchInput"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ShopWatchInput"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ShopWatchInput"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShopWatchRecord"
+                                }
+                            }
+                        },
+                        "description": ""
+                    },
+                    "201": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShopWatchRecord"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            },
+            "delete": {
+                "operationId": "workspaces_shops_watch_destroy",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "shop_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "in": "path",
+                        "name": "workspace_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    },
+                    {
+                        "name": "X-CSRFToken",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Use csrfToken from /auth/csrf/ with its cookie; login rotates it and returns the next token."
+                    }
+                ],
+                "tags": [
+                    "workspaces"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No response body"
+                    }
+                }
+            }
+        },
+        "/api/v1/workspaces/{workspace_id}/watches/": {
+            "get": {
+                "operationId": "workspaces_watches_retrieve",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "workspace_id",
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        },
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "workspaces"
+                ],
+                "security": [
+                    {
+                        "cookieAuth": []
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ShopWatchList"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Ad": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "readOnly": true
+                    },
+                    "external_id": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "title": {
+                        "type": "string",
+                        "maxLength": 250
+                    },
+                    "copy": {
+                        "type": "string"
+                    },
+                    "product": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ProductSummary"
+                            }
+                        ],
+                        "readOnly": true
+                    },
+                    "shop": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ShopSummary"
+                            }
+                        ],
+                        "readOnly": true
+                    },
+                    "primary_media": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/MediaAsset"
+                            }
+                        ],
+                        "readOnly": true
+                    },
+                    "category": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Category"
+                            }
+                        ],
+                        "readOnly": true
+                    },
+                    "country": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Country"
+                            }
+                        ],
+                        "readOnly": true
+                    },
+                    "platform": {
+                        "$ref": "#/components/schemas/PlatformEnum"
+                    },
+                    "format": {
+                        "$ref": "#/components/schemas/AdFormatEnum"
+                    },
+                    "tags": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Tag"
+                        },
+                        "readOnly": true
+                    },
+                    "latest_metrics": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/AdMetrics"
+                            }
+                        ],
+                        "nullable": true,
+                        "readOnly": true
+                    },
+                    "source_kind": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/SourceKindEnum"
+                            }
+                        ],
+                        "default": "manual"
+                    },
+                    "source_reference": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "observed_on": {
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "imported_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "category",
+                    "country",
+                    "external_id",
+                    "format",
+                    "id",
+                    "latest_metrics",
+                    "platform",
+                    "primary_media",
+                    "product",
+                    "shop",
+                    "tags",
+                    "title"
+                ]
+            },
+            "AdFormatEnum": {
+                "enum": [
+                    "image",
+                    "video"
+                ],
+                "type": "string",
+                "description": "* `image` - Image\n* `video` - Video"
+            },
+            "AdMetrics": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "trend": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TrendPoint"
+                        },
+                        "readOnly": true
+                    },
+                    "source_kind": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/SourceKindEnum"
+                            }
+                        ],
+                        "default": "manual"
+                    },
+                    "source_reference": {
+                        "type": "string",
+                        "default": "",
+                        "maxLength": 500
+                    },
+                    "observed_on": {
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "imported_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "value_kind": {
+                        "$ref": "#/components/schemas/ValueKindEnum"
+                    },
+                    "currency": {
+                        "type": "string",
+                        "maxLength": 3
+                    },
+                    "active_days": {
+                        "type": "integer",
+                        "maximum": 2147483647,
+                        "minimum": 0,
+                        "nullable": true
+                    },
+                    "reach_count": {
+                        "type": "integer",
+                        "maximum": 9223372036854775807,
+                        "minimum": 0,
+                        "format": "int64",
+                        "nullable": true
+                    },
+                    "likes_count": {
+                        "type": "integer",
+                        "maximum": 9223372036854775807,
+                        "minimum": 0,
+                        "format": "int64",
+                        "nullable": true
+                    },
+                    "spend_amount": {
+                        "type": "string",
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,14}(?:\\.\\d{0,2})?$",
+                        "nullable": true
+                    },
+                    "roas_ratio": {
+                        "type": "string",
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,8}(?:\\.\\d{0,2})?$",
+                        "nullable": true
+                    },
+                    "ctr_percent": {
+                        "type": "string",
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,3}(?:\\.\\d{0,2})?$",
+                        "nullable": true
+                    },
+                    "variant_count": {
+                        "type": "integer",
+                        "maximum": 2147483647,
+                        "minimum": 0,
+                        "nullable": true
+                    },
+                    "ad": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "required": [
+                    "ad",
+                    "id",
+                    "trend"
+                ]
+            },
+            "AdPreview": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "readOnly": true
+                    },
+                    "title": {
+                        "type": "string",
+                        "maxLength": 250
+                    },
+                    "format": {
+                        "$ref": "#/components/schemas/AdFormatEnum"
+                    },
+                    "primary_media": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/MediaAsset"
+                            }
+                        ],
+                        "readOnly": true
+                    },
+                    "source_kind": {
+                        "$ref": "#/components/schemas/SourceKindEnum"
+                    }
+                },
+                "required": [
+                    "format",
+                    "id",
+                    "primary_media",
+                    "title"
+                ]
+            },
+            "AudienceEnum": {
+                "enum": [
+                    "consumer",
+                    "business",
+                    "both"
+                ],
+                "type": "string",
+                "description": "* `consumer` - Consumer\n* `business` - Business\n* `both` - Both"
+            },
+            "BlankEnum": {
+                "enum": [
+                    ""
+                ]
+            },
+            "BookmarkList": {
+                "type": "object",
+                "properties": {
+                    "count": {
+                        "type": "integer"
+                    },
+                    "results": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/BookmarkRecord"
+                        }
+                    }
+                },
+                "required": [
+                    "count",
+                    "results"
+                ]
+            },
+            "BookmarkRecord": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "target_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "target": {
+                        "$ref": "#/components/schemas/BookmarkTarget"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "created_at",
+                    "id",
+                    "target",
+                    "target_id"
+                ]
+            },
+            "BookmarkTarget": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "source_kind": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "domain": {
+                        "type": "string"
+                    },
+                    "product_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "shop_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "required": [
+                    "id",
+                    "name",
+                    "source_kind"
+                ]
+            },
+            "CSRFToken": {
+                "type": "object",
+                "properties": {
+                    "csrfToken": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "csrfToken"
+                ]
+            },
+            "Category": {
+                "type": "object",
+                "properties": {
+                    "slug": {
+                        "type": "string",
+                        "maxLength": 80,
+                        "pattern": "^[-a-zA-Z0-9_]+$"
+                    },
+                    "label": {
+                        "type": "string",
+                        "maxLength": 120
+                    }
+                },
+                "required": [
+                    "label",
+                    "slug"
+                ]
+            },
+            "Country": {
+                "type": "object",
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "maxLength": 2
+                    },
+                    "label": {
+                        "type": "string",
+                        "maxLength": 120
+                    },
+                    "flag": {
+                        "type": "string",
+                        "maxLength": 8
+                    }
+                },
+                "required": [
+                    "code",
+                    "label"
+                ]
+            },
+            "Counts": {
+                "type": "object",
+                "properties": {
+                    "ads": {
+                        "type": "integer"
+                    },
+                    "products": {
+                        "type": "integer"
+                    },
+                    "shops": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "ads",
+                    "products",
+                    "shops"
+                ]
+            },
+            "DemoSourceKindEnum": {
+                "type": "string",
+                "enum": [
+                    "demo"
+                ]
+            },
+            "Distribution": {
+                "type": "object",
+                "properties": {
+                    "platform": {
+                        "type": "string"
+                    },
+                    "count": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "count",
+                    "platform"
+                ]
+            },
+            "EntryOptionsResponse": {
+                "type": "object",
+                "properties": {
+                    "source_kind": {
+                        "type": "string"
+                    },
+                    "label": {
+                        "type": "string"
+                    },
+                    "idea_examples": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/IdeaExample"
+                        }
+                    }
+                },
+                "required": [
+                    "idea_examples",
+                    "label",
+                    "source_kind"
+                ]
+            },
+            "FilterOptions": {
+                "type": "object",
+                "properties": {
+                    "source_kind": {
+                        "type": "string"
+                    },
+                    "label": {
+                        "type": "string"
+                    },
+                    "categories": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Category"
+                        }
+                    },
+                    "countries": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Country"
+                        }
+                    },
+                    "platforms": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "formats": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "required": [
+                    "categories",
+                    "countries",
+                    "formats",
+                    "label",
+                    "platforms",
+                    "source_kind"
+                ]
+            },
+            "GoalEnum": {
+                "enum": [
+                    "market",
+                    "competitors",
+                    "opportunity"
+                ],
+                "type": "string",
+                "description": "* `market` - Market\n* `competitors` - Competitors\n* `opportunity` - Opportunity"
+            },
+            "HealthResponse": {
+                "type": "object",
+                "properties": {
+                    "status": {
+                        "type": "string"
+                    },
+                    "database": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "database",
+                    "status"
+                ]
+            },
+            "HomeResponse": {
+                "type": "object",
+                "properties": {
+                    "source_kind": {
+                        "type": "string"
+                    },
+                    "label": {
+                        "type": "string"
+                    },
+                    "selection_index": {
+                        "type": "integer"
+                    },
+                    "available_record_counts": {
+                        "$ref": "#/components/schemas/Counts"
+                    },
+                    "featured_ads": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Ad"
+                        }
+                    },
+                    "featured_products": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Product"
+                        }
+                    },
+                    "featured_shops": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Shop"
+                        }
+                    }
+                },
+                "required": [
+                    "available_record_counts",
+                    "featured_ads",
+                    "featured_products",
+                    "featured_shops",
+                    "label",
+                    "selection_index",
+                    "source_kind"
+                ]
+            },
+            "IdeaExample": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "text": {
+                        "type": "string"
+                    },
+                    "icon": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "icon",
+                    "id",
+                    "text"
+                ]
+            },
+            "Login": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string",
+                        "maxLength": 150
+                    },
+                    "password": {
+                        "type": "string",
+                        "writeOnly": true,
+                        "maxLength": 1024
+                    }
+                },
+                "required": [
+                    "password",
+                    "username"
+                ]
+            },
+            "MediaAsset": {
+                "type": "object",
+                "properties": {
+                    "key": {
+                        "type": "string",
+                        "maxLength": 80,
+                        "pattern": "^[-a-zA-Z0-9_]+$"
+                    },
+                    "path": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "source_width": {
+                        "type": "integer",
+                        "maximum": 2147483647,
+                        "minimum": 0,
+                        "nullable": true
+                    },
+                    "source_height": {
+                        "type": "integer",
+                        "maximum": 2147483647,
+                        "minimum": 0,
+                        "nullable": true
+                    },
+                    "crop_x": {
+                        "type": "integer",
+                        "maximum": 2147483647,
+                        "minimum": 0,
+                        "nullable": true
+                    },
+                    "crop_y": {
+                        "type": "integer",
+                        "maximum": 2147483647,
+                        "minimum": 0,
+                        "nullable": true
+                    },
+                    "crop_width": {
+                        "type": "integer",
+                        "maximum": 2147483647,
+                        "minimum": 0,
+                        "nullable": true
+                    },
+                    "crop_height": {
+                        "type": "integer",
+                        "maximum": 2147483647,
+                        "minimum": 0,
+                        "nullable": true
+                    },
+                    "media_kind": {
+                        "$ref": "#/components/schemas/AdFormatEnum"
+                    },
+                    "video_url": {
+                        "nullable": true,
+                        "oneOf": [
+                            {
+                                "type": "string",
+                                "format": "uri",
+                                "maxLength": 500
+                            },
+                            {
+                                "type": "string",
+                                "maxLength": 0
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "key",
+                    "path"
+                ]
+            },
+            "PaginatedAdList": {
+                "type": "object",
+                "required": [
+                    "count",
+                    "results",
+                    "source_kind",
+                    "label"
+                ],
+                "properties": {
+                    "count": {
+                        "type": "integer",
+                        "example": 123
+                    },
+                    "next": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "uri-reference",
+                        "example": "http://api.example.org/accounts/?page=4"
+                    },
+                    "previous": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "uri-reference",
+                        "example": "http://api.example.org/accounts/?page=2"
+                    },
+                    "results": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Ad"
+                        }
+                    },
+                    "source_kind": {
+                        "$ref": "#/components/schemas/DemoSourceKindEnum"
+                    },
+                    "label": {
+                        "type": "string"
+                    }
+                }
+            },
+            "PaginatedProductList": {
+                "type": "object",
+                "required": [
+                    "count",
+                    "results",
+                    "source_kind",
+                    "label"
+                ],
+                "properties": {
+                    "count": {
+                        "type": "integer",
+                        "example": 123
+                    },
+                    "next": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "uri-reference",
+                        "example": "http://api.example.org/accounts/?page=4"
+                    },
+                    "previous": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "uri-reference",
+                        "example": "http://api.example.org/accounts/?page=2"
+                    },
+                    "results": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Product"
+                        }
+                    },
+                    "source_kind": {
+                        "$ref": "#/components/schemas/DemoSourceKindEnum"
+                    },
+                    "label": {
+                        "type": "string"
+                    }
+                }
+            },
+            "PaginatedShopList": {
+                "type": "object",
+                "required": [
+                    "count",
+                    "results",
+                    "source_kind",
+                    "label"
+                ],
+                "properties": {
+                    "count": {
+                        "type": "integer",
+                        "example": 123
+                    },
+                    "next": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "uri-reference",
+                        "example": "http://api.example.org/accounts/?page=4"
+                    },
+                    "previous": {
+                        "type": "string",
+                        "nullable": true,
+                        "format": "uri-reference",
+                        "example": "http://api.example.org/accounts/?page=2"
+                    },
+                    "results": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Shop"
+                        }
+                    },
+                    "source_kind": {
+                        "$ref": "#/components/schemas/DemoSourceKindEnum"
+                    },
+                    "label": {
+                        "type": "string"
+                    }
+                }
+            },
+            "PatchedProjectBrief": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "readOnly": true
+                    },
+                    "workspace": {
+                        "type": "string",
+                        "format": "uuid",
+                        "readOnly": true
+                    },
+                    "idea": {
+                        "type": "string",
+                        "maxLength": 4000
+                    },
+                    "customer_description": {
+                        "type": "string",
+                        "maxLength": 2000
+                    },
+                    "audience": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/AudienceEnum"
+                            },
+                            {
+                                "$ref": "#/components/schemas/BlankEnum"
+                            }
+                        ]
+                    },
+                    "market": {
+                        "type": "string",
+                        "maxLength": 120
+                    },
+                    "budget_band": {
+                        "type": "string",
+                        "maxLength": 120
+                    },
+                    "goal": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/GoalEnum"
+                            },
+                            {
+                                "$ref": "#/components/schemas/BlankEnum"
+                            }
+                        ]
+                    },
+                    "goal_note": {
+                        "type": "string",
+                        "maxLength": 2000
+                    },
+                    "completed_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    }
+                }
+            },
+            "PatchedSavedReport": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "readOnly": true
+                    },
+                    "workspace": {
+                        "type": "string",
+                        "format": "uuid",
+                        "readOnly": true
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 160
+                    },
+                    "report_type": {
+                        "$ref": "#/components/schemas/ReportTypeEnum"
+                    },
+                    "period_days": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/PeriodDaysEnum"
+                            }
+                        ],
+                        "minimum": 0,
+                        "maximum": 32767
+                    },
+                    "filters": {},
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    }
+                }
+            },
+            "PatchedWorkspace": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "readOnly": true
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 160
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    }
+                }
+            },
+            "PeriodDaysEnum": {
+                "enum": [
+                    7,
+                    30,
+                    90
+                ],
+                "type": "integer",
+                "description": "* `7` - 7\n* `30` - 30\n* `90` - 90"
+            },
+            "PlatformEnum": {
+                "enum": [
+                    "meta",
+                    "tiktok",
+                    "youtube"
+                ],
+                "type": "string",
+                "description": "* `meta` - Meta\n* `tiktok` - TikTok\n* `youtube` - YouTube"
+            },
+            "Product": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "readOnly": true
+                    },
+                    "external_id": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 200
+                    },
+                    "english_name": {
+                        "type": "string",
+                        "maxLength": 200
+                    },
+                    "shop": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ShopSummary"
+                            }
+                        ],
+                        "readOnly": true
+                    },
+                    "primary_media": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/MediaAsset"
+                            }
+                        ],
+                        "readOnly": true
+                    },
+                    "source_kind": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/SourceKindEnum"
+                            }
+                        ],
+                        "default": "manual"
+                    },
+                    "source_reference": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "observed_on": {
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "imported_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "published_on": {
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "category": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Category"
+                            }
+                        ],
+                        "readOnly": true
+                    },
+                    "latest_metrics": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ProductMetrics"
+                            }
+                        ],
+                        "nullable": true,
+                        "readOnly": true
+                    },
+                    "related_ads": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AdPreview"
+                        },
+                        "readOnly": true
+                    },
+                    "actual_ads_count": {
+                        "type": "integer",
+                        "readOnly": true
+                    }
+                },
+                "required": [
+                    "actual_ads_count",
+                    "category",
+                    "external_id",
+                    "id",
+                    "latest_metrics",
+                    "name",
+                    "primary_media",
+                    "related_ads",
+                    "shop"
+                ]
+            },
+            "ProductMetrics": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "source_kind": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/SourceKindEnum"
+                            }
+                        ],
+                        "default": "manual"
+                    },
+                    "source_reference": {
+                        "type": "string",
+                        "default": "",
+                        "maxLength": 500
+                    },
+                    "observed_on": {
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "imported_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "value_kind": {
+                        "$ref": "#/components/schemas/ValueKindEnum"
+                    },
+                    "currency": {
+                        "type": "string",
+                        "maxLength": 3
+                    },
+                    "price_amount": {
+                        "type": "string",
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,14}(?:\\.\\d{0,2})?$",
+                        "nullable": true
+                    },
+                    "active_ads_count": {
+                        "type": "integer",
+                        "maximum": 2147483647,
+                        "minimum": 0,
+                        "nullable": true
+                    },
+                    "growth_percent": {
+                        "type": "string",
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,8}(?:\\.\\d{0,2})?$",
+                        "nullable": true
+                    },
+                    "product": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "required": [
+                    "id",
+                    "product"
+                ]
+            },
+            "ProductPreview": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "readOnly": true
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 200
+                    },
+                    "primary_media": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/MediaAsset"
+                            }
+                        ],
+                        "readOnly": true
+                    },
+                    "source_kind": {
+                        "$ref": "#/components/schemas/SourceKindEnum"
+                    }
+                },
+                "required": [
+                    "id",
+                    "name",
+                    "primary_media"
+                ]
+            },
+            "ProductSummary": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "readOnly": true
+                    },
+                    "external_id": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 200
+                    },
+                    "english_name": {
+                        "type": "string",
+                        "maxLength": 200
+                    },
+                    "shop": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ShopSummary"
+                            }
+                        ],
+                        "readOnly": true
+                    },
+                    "primary_media": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/MediaAsset"
+                            }
+                        ],
+                        "readOnly": true
+                    },
+                    "source_kind": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/SourceKindEnum"
+                            }
+                        ],
+                        "default": "manual"
+                    },
+                    "source_reference": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "observed_on": {
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "imported_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "external_id",
+                    "id",
+                    "name",
+                    "primary_media",
+                    "shop"
+                ]
+            },
+            "ProjectBrief": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "readOnly": true
+                    },
+                    "workspace": {
+                        "type": "string",
+                        "format": "uuid",
+                        "readOnly": true
+                    },
+                    "idea": {
+                        "type": "string",
+                        "maxLength": 4000
+                    },
+                    "customer_description": {
+                        "type": "string",
+                        "maxLength": 2000
+                    },
+                    "audience": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/AudienceEnum"
+                            },
+                            {
+                                "$ref": "#/components/schemas/BlankEnum"
+                            }
+                        ]
+                    },
+                    "market": {
+                        "type": "string",
+                        "maxLength": 120
+                    },
+                    "budget_band": {
+                        "type": "string",
+                        "maxLength": 120
+                    },
+                    "goal": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/GoalEnum"
+                            },
+                            {
+                                "$ref": "#/components/schemas/BlankEnum"
+                            }
+                        ]
+                    },
+                    "goal_note": {
+                        "type": "string",
+                        "maxLength": 2000
+                    },
+                    "completed_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true,
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    }
+                },
+                "required": [
+                    "completed_at",
+                    "created_at",
+                    "id",
+                    "updated_at",
+                    "workspace"
+                ]
+            },
+            "ReportMetric": {
+                "type": "object",
+                "properties": {
+                    "key": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "unit": {
+                        "type": "string"
+                    },
+                    "aggregation": {
+                        "type": "string"
+                    },
+                    "value_kind": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "aggregation",
+                    "key",
+                    "unit",
+                    "value",
+                    "value_kind"
+                ]
+            },
+            "ReportResponse": {
+                "type": "object",
+                "properties": {
+                    "source_kind": {
+                        "type": "string"
+                    },
+                    "label": {
+                        "type": "string"
+                    },
+                    "focus": {
+                        "type": "string"
+                    },
+                    "period_days_requested": {
+                        "type": "integer"
+                    },
+                    "period_filter_applied": {
+                        "type": "boolean"
+                    },
+                    "period_notice": {
+                        "type": "string"
+                    },
+                    "available_record_counts": {
+                        "$ref": "#/components/schemas/Counts"
+                    },
+                    "metrics": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ReportMetric"
+                        }
+                    },
+                    "platform_distribution": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Distribution"
+                        }
+                    },
+                    "distribution_basis": {
+                        "type": "string"
+                    },
+                    "trend_basis": {
+                        "type": "string"
+                    },
+                    "trend_points": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TrendPoint"
+                        }
+                    }
+                },
+                "required": [
+                    "available_record_counts",
+                    "distribution_basis",
+                    "focus",
+                    "label",
+                    "metrics",
+                    "period_days_requested",
+                    "period_filter_applied",
+                    "period_notice",
+                    "platform_distribution",
+                    "source_kind",
+                    "trend_basis",
+                    "trend_points"
+                ]
+            },
+            "ReportTypeEnum": {
+                "enum": [
+                    "ads",
+                    "products",
+                    "shops"
+                ],
+                "type": "string",
+                "description": "* `ads` - Ads\n* `products` - Products\n* `shops` - Shops"
+            },
+            "SavedReport": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "readOnly": true
+                    },
+                    "workspace": {
+                        "type": "string",
+                        "format": "uuid",
+                        "readOnly": true
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 160
+                    },
+                    "report_type": {
+                        "$ref": "#/components/schemas/ReportTypeEnum"
+                    },
+                    "period_days": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/PeriodDaysEnum"
+                            }
+                        ],
+                        "minimum": 0,
+                        "maximum": 32767
+                    },
+                    "filters": {},
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    }
+                },
+                "required": [
+                    "created_at",
+                    "id",
+                    "name",
+                    "report_type",
+                    "updated_at",
+                    "workspace"
+                ]
+            },
+            "SessionIdentity": {
+                "type": "object",
+                "properties": {
+                    "user": {
+                        "$ref": "#/components/schemas/UserIdentity"
+                    }
+                },
+                "required": [
+                    "user"
+                ]
+            },
+            "SessionLoginResponse": {
+                "type": "object",
+                "properties": {
+                    "user": {
+                        "$ref": "#/components/schemas/UserIdentity"
+                    },
+                    "csrfToken": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "csrfToken",
+                    "user"
+                ]
+            },
+            "Shop": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "readOnly": true
+                    },
+                    "external_id": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 200
+                    },
+                    "domain": {
+                        "type": "string",
+                        "maxLength": 253
+                    },
+                    "initial": {
+                        "type": "string",
+                        "maxLength": 8
+                    },
+                    "color": {
+                        "type": "string",
+                        "maxLength": 7
+                    },
+                    "category": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Category"
+                            }
+                        ],
+                        "readOnly": true
+                    },
+                    "country": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Country"
+                            }
+                        ],
+                        "readOnly": true
+                    },
+                    "created_on": {
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "source_kind": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/SourceKindEnum"
+                            }
+                        ],
+                        "default": "manual"
+                    },
+                    "source_reference": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "observed_on": {
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "imported_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "latest_metrics": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ShopMetrics"
+                            }
+                        ],
+                        "nullable": true,
+                        "readOnly": true
+                    },
+                    "gallery": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ShopMedia"
+                        },
+                        "readOnly": true
+                    },
+                    "related_products": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ProductPreview"
+                        },
+                        "readOnly": true
+                    },
+                    "related_ads": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AdPreview"
+                        },
+                        "readOnly": true
+                    },
+                    "actual_products_count": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "actual_ads_count": {
+                        "type": "integer",
+                        "readOnly": true
+                    }
+                },
+                "required": [
+                    "actual_ads_count",
+                    "actual_products_count",
+                    "category",
+                    "country",
+                    "domain",
+                    "external_id",
+                    "gallery",
+                    "id",
+                    "latest_metrics",
+                    "name",
+                    "related_ads",
+                    "related_products"
+                ]
+            },
+            "ShopMedia": {
+                "type": "object",
+                "properties": {
+                    "position": {
+                        "type": "integer",
+                        "maximum": 2147483647,
+                        "minimum": 0
+                    },
+                    "media": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/MediaAsset"
+                            }
+                        ],
+                        "readOnly": true
+                    }
+                },
+                "required": [
+                    "media",
+                    "position"
+                ]
+            },
+            "ShopMetrics": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "trend": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TrendPoint"
+                        },
+                        "readOnly": true
+                    },
+                    "source_kind": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/SourceKindEnum"
+                            }
+                        ],
+                        "default": "manual"
+                    },
+                    "source_reference": {
+                        "type": "string",
+                        "default": "",
+                        "maxLength": 500
+                    },
+                    "observed_on": {
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "imported_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "value_kind": {
+                        "$ref": "#/components/schemas/ValueKindEnum"
+                    },
+                    "currency": {
+                        "type": "string",
+                        "maxLength": 3
+                    },
+                    "daily_revenue_estimate_amount": {
+                        "type": "string",
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,14}(?:\\.\\d{0,2})?$",
+                        "nullable": true
+                    },
+                    "monthly_visits_count": {
+                        "type": "integer",
+                        "maximum": 9223372036854775807,
+                        "minimum": 0,
+                        "format": "int64",
+                        "nullable": true
+                    },
+                    "growth_30d_percent": {
+                        "type": "string",
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,8}(?:\\.\\d{0,2})?$",
+                        "nullable": true
+                    },
+                    "active_ads_count": {
+                        "type": "integer",
+                        "maximum": 2147483647,
+                        "minimum": 0,
+                        "nullable": true
+                    },
+                    "total_ads_count": {
+                        "type": "integer",
+                        "maximum": 2147483647,
+                        "minimum": 0,
+                        "nullable": true
+                    },
+                    "reported_products_count": {
+                        "type": "integer",
+                        "maximum": 2147483647,
+                        "minimum": 0,
+                        "nullable": true
+                    },
+                    "shop": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                },
+                "required": [
+                    "id",
+                    "shop",
+                    "trend"
+                ]
+            },
+            "ShopSummary": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "readOnly": true
+                    },
+                    "external_id": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 200
+                    },
+                    "domain": {
+                        "type": "string",
+                        "maxLength": 253
+                    },
+                    "initial": {
+                        "type": "string",
+                        "maxLength": 8
+                    },
+                    "color": {
+                        "type": "string",
+                        "maxLength": 7
+                    },
+                    "category": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Category"
+                            }
+                        ],
+                        "readOnly": true
+                    },
+                    "country": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/Country"
+                            }
+                        ],
+                        "readOnly": true
+                    },
+                    "created_on": {
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "source_kind": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/SourceKindEnum"
+                            }
+                        ],
+                        "default": "manual"
+                    },
+                    "source_reference": {
+                        "type": "string",
+                        "maxLength": 500
+                    },
+                    "observed_on": {
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "imported_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "category",
+                    "country",
+                    "domain",
+                    "external_id",
+                    "id",
+                    "name"
+                ]
+            },
+            "ShopWatchInput": {
+                "type": "object",
+                "properties": {
+                    "enabled": {
+                        "type": "boolean",
+                        "default": true
+                    }
+                }
+            },
+            "ShopWatchList": {
+                "type": "object",
+                "properties": {
+                    "count": {
+                        "type": "integer"
+                    },
+                    "results": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ShopWatchRecord"
+                        }
+                    }
+                },
+                "required": [
+                    "count",
+                    "results"
+                ]
+            },
+            "ShopWatchRecord": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "shop_id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "shop": {
+                        "$ref": "#/components/schemas/BookmarkTarget"
+                    },
+                    "enabled": {
+                        "type": "boolean"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "created_at",
+                    "enabled",
+                    "id",
+                    "shop",
+                    "shop_id",
+                    "updated_at"
+                ]
+            },
+            "SourceKindEnum": {
+                "enum": [
+                    "demo",
+                    "manual",
+                    "csv",
+                    "provider"
+                ],
+                "type": "string",
+                "description": "* `demo` - Demo\n* `manual` - Manual\n* `csv` - CSV\n* `provider` - Provider"
+            },
+            "Tag": {
+                "type": "object",
+                "properties": {
+                    "slug": {
+                        "type": "string",
+                        "pattern": "^[-\\w]+$",
+                        "maxLength": 100
+                    },
+                    "label": {
+                        "type": "string",
+                        "maxLength": 120
+                    }
+                },
+                "required": [
+                    "label",
+                    "slug"
+                ]
+            },
+            "TrendPoint": {
+                "type": "object",
+                "properties": {
+                    "index": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "value": {
+                        "type": "number",
+                        "format": "double"
+                    }
+                },
+                "required": [
+                    "index",
+                    "value"
+                ]
+            },
+            "UserIdentity": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "display_name": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "display_name",
+                    "id",
+                    "username"
+                ]
+            },
+            "ValueKindEnum": {
+                "enum": [
+                    "illustrative",
+                    "observed",
+                    "estimated"
+                ],
+                "type": "string",
+                "description": "* `illustrative` - Illustrative\n* `observed` - Observed\n* `estimated` - Estimated"
+            },
+            "Workspace": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "readOnly": true
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 160
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    }
+                },
+                "required": [
+                    "created_at",
+                    "id",
+                    "name",
+                    "updated_at"
+                ]
+            }
+        },
+        "securitySchemes": {
+            "cookieAuth": {
+                "type": "apiKey",
+                "in": "cookie",
+                "name": "sessionid"
+            }
+        }
+    }
+}

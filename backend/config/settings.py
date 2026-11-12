@@ -9,7 +9,7 @@ CSRF_TRUSTED_ORIGINS = os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "http://loc
 INSTALLED_APPS = [
     "django.contrib.admin", "django.contrib.auth", "django.contrib.contenttypes",
     "django.contrib.sessions", "django.contrib.messages", "django.contrib.staticfiles",
-    "rest_framework", "accounts", "health",
+    "rest_framework", "drf_spectacular", "drf_spectacular_sidecar", "accounts", "health", "market", "workspaces",
 ]
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -45,6 +45,8 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "URL_FORMAT_OVERRIDE": None,
     "DEFAULT_AUTHENTICATION_CLASSES": ["rest_framework.authentication.SessionAuthentication"],
     "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
@@ -53,8 +55,33 @@ LANGUAGE_CODE = "fa-ir"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
-STATIC_URL = "static/"
+STATIC_URL = "/api/v1/static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SAMESITE = "Lax"
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "NAMA Analyze Demo API",
+    "DESCRIPTION": "Labelled illustrative data, not verified market intelligence. Private workspace operations use Django sessions and CSRF.",
+    "VERSION": "0.3.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SWAGGER_UI_DIST": "SIDECAR",
+    "SWAGGER_UI_FAVICON_HREF": "SIDECAR",
+    "POSTPROCESSING_HOOKS": ["drf_spectacular.hooks.postprocess_schema_enums", "config.api_schema.document_csrf_header"],
+    "ENUM_NAME_OVERRIDES": {
+        "SourceKindEnum": "market.models.SourceKind.choices",
+        "DemoSourceKindEnum": ["demo"],
+        "ValueKindEnum": "market.models.ValueKind.choices",
+        "PlatformEnum": "market.models.Platform.choices",
+        "AdFormatEnum": "market.models.AdFormat.choices",
+        "FilterAdFormatEnum": ["image", "video"],
+        "CatalogKindEnum": ["ads", "products", "shops"],
+        "PeriodDaysEnum": [(7, "7"), (30, "30"), (90, "90")],
+        "CountryCodeEnum": ["CA", "US", "GB", "FR", "DE"],
+        "CategorySlugEnum": ["fashion", "home-kitchen", "beauty-health", "lifestyle"],
+        "AdOrderingEnum": ["-reach", "-roas", "-active_days", "active_days"],
+        "ProductOrderingEnum": ["-growth", "price", "-active_ads", "-published_on"],
+        "ShopOrderingEnum": ["-growth", "-revenue", "-visits", "-active_ads"],
+    },
+}

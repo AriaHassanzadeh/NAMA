@@ -1,0 +1,3146 @@
+{
+  "engine": "postgresql",
+  "generated_at": "2026-11-12T09:48:47.248589+00:00",
+  "tables": [
+    {
+      "name": "accounts_user",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int8",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 64,
+          "scale": 0,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "password",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 128,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "last_login",
+          "type": "timestamptz",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "is_superuser",
+          "type": "bool",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "username",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 150,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "UK"
+          ],
+          "references": []
+        },
+        {
+          "name": "first_name",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 150,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "last_name",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 150,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "email",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 254,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "is_staff",
+          "type": "bool",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "is_active",
+          "type": "bool",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "date_joined",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        }
+      ],
+      "constraints": [
+        {
+          "name": "accounts_user_pkey",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "accounts_user_username_key",
+          "definition": "UNIQUE (username)"
+        }
+      ]
+    },
+    {
+      "name": "accounts_user_groups",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int8",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 64,
+          "scale": 0,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "user_id",
+          "type": "int8",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 64,
+          "scale": 0,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "accounts_user",
+              "column": "id"
+            }
+          ]
+        },
+        {
+          "name": "group_id",
+          "type": "int4",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "auth_group",
+              "column": "id"
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "accounts_user_groups_group_id_bd11a704_fk_auth_group_id",
+          "definition": "FOREIGN KEY (group_id) REFERENCES auth_group(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "accounts_user_groups_pkey",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "accounts_user_groups_user_id_52b62117_fk_accounts_user_id",
+          "definition": "FOREIGN KEY (user_id) REFERENCES accounts_user(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "accounts_user_groups_user_id_group_id_59c0b32f_uniq",
+          "definition": "UNIQUE (user_id, group_id)"
+        }
+      ]
+    },
+    {
+      "name": "accounts_user_user_permissions",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int8",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 64,
+          "scale": 0,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "user_id",
+          "type": "int8",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 64,
+          "scale": 0,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "accounts_user",
+              "column": "id"
+            }
+          ]
+        },
+        {
+          "name": "permission_id",
+          "type": "int4",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "auth_permission",
+              "column": "id"
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "accounts_user_user_p_permission_id_113bb443_fk_auth_perm",
+          "definition": "FOREIGN KEY (permission_id) REFERENCES auth_permission(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "accounts_user_user_p_user_id_e4f0a161_fk_accounts_",
+          "definition": "FOREIGN KEY (user_id) REFERENCES accounts_user(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "accounts_user_user_permi_user_id_permission_id_2ab516c2_uniq",
+          "definition": "UNIQUE (user_id, permission_id)"
+        },
+        {
+          "name": "accounts_user_user_permissions_pkey",
+          "definition": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "name": "auth_group",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int4",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "name",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 150,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "UK"
+          ],
+          "references": []
+        }
+      ],
+      "constraints": [
+        {
+          "name": "auth_group_name_key",
+          "definition": "UNIQUE (name)"
+        },
+        {
+          "name": "auth_group_pkey",
+          "definition": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "name": "auth_group_permissions",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int8",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 64,
+          "scale": 0,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "group_id",
+          "type": "int4",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "auth_group",
+              "column": "id"
+            }
+          ]
+        },
+        {
+          "name": "permission_id",
+          "type": "int4",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "auth_permission",
+              "column": "id"
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "auth_group_permissio_permission_id_84c5c92e_fk_auth_perm",
+          "definition": "FOREIGN KEY (permission_id) REFERENCES auth_permission(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "auth_group_permissions_group_id_b120cbf9_fk_auth_group_id",
+          "definition": "FOREIGN KEY (group_id) REFERENCES auth_group(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "auth_group_permissions_group_id_permission_id_0cd325b0_uniq",
+          "definition": "UNIQUE (group_id, permission_id)"
+        },
+        {
+          "name": "auth_group_permissions_pkey",
+          "definition": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "name": "auth_permission",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int4",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "name",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 255,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "content_type_id",
+          "type": "int4",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "django_content_type",
+              "column": "id"
+            }
+          ]
+        },
+        {
+          "name": "codename",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 100,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        }
+      ],
+      "constraints": [
+        {
+          "name": "auth_permission_content_type_id_2f476e4b_fk_django_co",
+          "definition": "FOREIGN KEY (content_type_id) REFERENCES django_content_type(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "auth_permission_content_type_id_codename_01ab375a_uniq",
+          "definition": "UNIQUE (content_type_id, codename)"
+        },
+        {
+          "name": "auth_permission_pkey",
+          "definition": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "name": "django_admin_log",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int4",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "action_time",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "object_id",
+          "type": "text",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "object_repr",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 200,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "action_flag",
+          "type": "int2",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 16,
+          "scale": 0,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "change_message",
+          "type": "text",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "content_type_id",
+          "type": "int4",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "django_content_type",
+              "column": "id"
+            }
+          ]
+        },
+        {
+          "name": "user_id",
+          "type": "int8",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 64,
+          "scale": 0,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "accounts_user",
+              "column": "id"
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "django_admin_log_action_flag_check",
+          "definition": "CHECK ((action_flag >= 0))"
+        },
+        {
+          "name": "django_admin_log_content_type_id_c4bce8eb_fk_django_co",
+          "definition": "FOREIGN KEY (content_type_id) REFERENCES django_content_type(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "django_admin_log_pkey",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "django_admin_log_user_id_c564eba6_fk_accounts_user_id",
+          "definition": "FOREIGN KEY (user_id) REFERENCES accounts_user(id) DEFERRABLE INITIALLY DEFERRED"
+        }
+      ]
+    },
+    {
+      "name": "django_content_type",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int4",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "app_label",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 100,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "model",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 100,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        }
+      ],
+      "constraints": [
+        {
+          "name": "django_content_type_app_label_model_76bd3d3b_uniq",
+          "definition": "UNIQUE (app_label, model)"
+        },
+        {
+          "name": "django_content_type_pkey",
+          "definition": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "name": "django_migrations",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int8",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 64,
+          "scale": 0,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "app",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 255,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "name",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 255,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "applied",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        }
+      ],
+      "constraints": [
+        {
+          "name": "django_migrations_pkey",
+          "definition": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "name": "django_session",
+      "columns": [
+        {
+          "name": "session_key",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 40,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "session_data",
+          "type": "text",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "expire_date",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        }
+      ],
+      "constraints": [
+        {
+          "name": "django_session_pkey",
+          "definition": "PRIMARY KEY (session_key)"
+        }
+      ]
+    },
+    {
+      "name": "market_ad",
+      "columns": [
+        {
+          "name": "source_kind",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 16,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "source_reference",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 500,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "observed_on",
+          "type": "date",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "imported_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "external_id",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 100,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "platform",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 16,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "format",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 12,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "title",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 250,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "copy",
+          "type": "text",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "category_id",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 80,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "market_category",
+              "column": "slug"
+            }
+          ]
+        },
+        {
+          "name": "country_id",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 2,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "market_country",
+              "column": "code"
+            }
+          ]
+        },
+        {
+          "name": "primary_media_id",
+          "type": "varchar",
+          "nullable": true,
+          "default": null,
+          "length": 80,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "market_mediaasset",
+              "column": "key"
+            }
+          ]
+        },
+        {
+          "name": "product_id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "market_product",
+              "column": "id"
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "market_ad_category_id_ac8a339e_fk_market_category_slug",
+          "definition": "FOREIGN KEY (category_id) REFERENCES market_category(slug) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "market_ad_country_id_3675014d_fk_market_country_code",
+          "definition": "FOREIGN KEY (country_id) REFERENCES market_country(code) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "market_ad_format_valid",
+          "definition": "CHECK (((format)::text = ANY ((ARRAY['image'::character varying, 'video'::character varying])::text[])))"
+        },
+        {
+          "name": "market_ad_pkey",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "market_ad_platform_valid",
+          "definition": "CHECK (((platform)::text = ANY ((ARRAY['meta'::character varying, 'tiktok'::character varying, 'youtube'::character varying])::text[])))"
+        },
+        {
+          "name": "market_ad_primary_media_id_3f0b234d_fk_market_mediaasset_key",
+          "definition": "FOREIGN KEY (primary_media_id) REFERENCES market_mediaasset(key) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "market_ad_product_id_2b00c162_fk_market_product_id",
+          "definition": "FOREIGN KEY (product_id) REFERENCES market_product(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "market_ad_source_external_unique",
+          "definition": "UNIQUE (source_kind, external_id)"
+        }
+      ]
+    },
+    {
+      "name": "market_ad_tags",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int8",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 64,
+          "scale": 0,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "ad_id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "market_ad",
+              "column": "id"
+            }
+          ]
+        },
+        {
+          "name": "tag_id",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 100,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "market_tag",
+              "column": "slug"
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "market_ad_tags_ad_id_eb1a3402_fk_market_ad_id",
+          "definition": "FOREIGN KEY (ad_id) REFERENCES market_ad(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "market_ad_tags_ad_id_tag_id_1dcfd634_uniq",
+          "definition": "UNIQUE (ad_id, tag_id)"
+        },
+        {
+          "name": "market_ad_tags_pkey",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "market_ad_tags_tag_id_74b476a4_fk_market_tag_slug",
+          "definition": "FOREIGN KEY (tag_id) REFERENCES market_tag(slug) DEFERRABLE INITIALLY DEFERRED"
+        }
+      ]
+    },
+    {
+      "name": "market_admetrics",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int8",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 64,
+          "scale": 0,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "source_kind",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 16,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "source_reference",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 500,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "observed_on",
+          "type": "date",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "imported_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "value_kind",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 16,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "currency",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 3,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "active_days",
+          "type": "int4",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "reach_count",
+          "type": "int8",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 64,
+          "scale": 0,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "likes_count",
+          "type": "int8",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 64,
+          "scale": 0,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "spend_amount",
+          "type": "numeric",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 16,
+          "scale": 2,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "roas_ratio",
+          "type": "numeric",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 10,
+          "scale": 2,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "ctr_percent",
+          "type": "numeric",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 5,
+          "scale": 2,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "variant_count",
+          "type": "int4",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "trend",
+          "type": "jsonb",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "ad_id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "market_ad",
+              "column": "id"
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "market_ad_ctr_range",
+          "definition": "CHECK (((ctr_percent >= (0)::numeric) AND (ctr_percent <= (100)::numeric)))"
+        },
+        {
+          "name": "market_ad_metrics_source_unique",
+          "definition": "UNIQUE (ad_id, source_kind, source_reference)"
+        },
+        {
+          "name": "market_ad_roas_nonnegative",
+          "definition": "CHECK ((roas_ratio >= (0)::numeric))"
+        },
+        {
+          "name": "market_ad_spend_nonnegative",
+          "definition": "CHECK ((spend_amount >= (0)::numeric))"
+        },
+        {
+          "name": "market_admetrics_active_days_check",
+          "definition": "CHECK ((active_days >= 0))"
+        },
+        {
+          "name": "market_admetrics_ad_id_9ce80f48_fk_market_ad_id",
+          "definition": "FOREIGN KEY (ad_id) REFERENCES market_ad(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "market_admetrics_likes_count_check",
+          "definition": "CHECK ((likes_count >= 0))"
+        },
+        {
+          "name": "market_admetrics_pkey",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "market_admetrics_reach_count_check",
+          "definition": "CHECK ((reach_count >= 0))"
+        },
+        {
+          "name": "market_admetrics_variant_count_check",
+          "definition": "CHECK ((variant_count >= 0))"
+        }
+      ]
+    },
+    {
+      "name": "market_category",
+      "columns": [
+        {
+          "name": "slug",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 80,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "label",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 120,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        }
+      ],
+      "constraints": [
+        {
+          "name": "market_category_pkey",
+          "definition": "PRIMARY KEY (slug)"
+        }
+      ]
+    },
+    {
+      "name": "market_country",
+      "columns": [
+        {
+          "name": "code",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 2,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "label",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 120,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "flag",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 8,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        }
+      ],
+      "constraints": [
+        {
+          "name": "market_country_pkey",
+          "definition": "PRIMARY KEY (code)"
+        }
+      ]
+    },
+    {
+      "name": "market_mediaasset",
+      "columns": [
+        {
+          "name": "key",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 80,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "path",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 500,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "source_width",
+          "type": "int4",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "source_height",
+          "type": "int4",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "crop_x",
+          "type": "int4",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "crop_y",
+          "type": "int4",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "crop_width",
+          "type": "int4",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "crop_height",
+          "type": "int4",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "media_kind",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 12,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "video_url",
+          "type": "varchar",
+          "nullable": true,
+          "default": null,
+          "length": 500,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        }
+      ],
+      "constraints": [
+        {
+          "name": "market_mediaasset_crop_height_check",
+          "definition": "CHECK ((crop_height >= 0))"
+        },
+        {
+          "name": "market_mediaasset_crop_width_check",
+          "definition": "CHECK ((crop_width >= 0))"
+        },
+        {
+          "name": "market_mediaasset_crop_x_check",
+          "definition": "CHECK ((crop_x >= 0))"
+        },
+        {
+          "name": "market_mediaasset_crop_y_check",
+          "definition": "CHECK ((crop_y >= 0))"
+        },
+        {
+          "name": "market_mediaasset_pkey",
+          "definition": "PRIMARY KEY (key)"
+        },
+        {
+          "name": "market_mediaasset_source_height_check",
+          "definition": "CHECK ((source_height >= 0))"
+        },
+        {
+          "name": "market_mediaasset_source_width_check",
+          "definition": "CHECK ((source_width >= 0))"
+        }
+      ]
+    },
+    {
+      "name": "market_product",
+      "columns": [
+        {
+          "name": "source_kind",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 16,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "source_reference",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 500,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "observed_on",
+          "type": "date",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "imported_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "external_id",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 100,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "name",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 200,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "english_name",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 200,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "description",
+          "type": "text",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "published_on",
+          "type": "date",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "category_id",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 80,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "market_category",
+              "column": "slug"
+            }
+          ]
+        },
+        {
+          "name": "primary_media_id",
+          "type": "varchar",
+          "nullable": true,
+          "default": null,
+          "length": 80,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "market_mediaasset",
+              "column": "key"
+            }
+          ]
+        },
+        {
+          "name": "shop_id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "market_shop",
+              "column": "id"
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "market_product_category_id_68f368e0_fk_market_category_slug",
+          "definition": "FOREIGN KEY (category_id) REFERENCES market_category(slug) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "market_product_pkey",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "market_product_primary_media_id_70509d26_fk_market_me",
+          "definition": "FOREIGN KEY (primary_media_id) REFERENCES market_mediaasset(key) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "market_product_shop_id_adbe482e_fk_market_shop_id",
+          "definition": "FOREIGN KEY (shop_id) REFERENCES market_shop(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "market_product_source_external_unique",
+          "definition": "UNIQUE (source_kind, external_id)"
+        }
+      ]
+    },
+    {
+      "name": "market_productmetrics",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int8",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 64,
+          "scale": 0,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "source_kind",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 16,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "source_reference",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 500,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "observed_on",
+          "type": "date",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "imported_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "value_kind",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 16,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "currency",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 3,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "price_amount",
+          "type": "numeric",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 16,
+          "scale": 2,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "active_ads_count",
+          "type": "int4",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "growth_percent",
+          "type": "numeric",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 10,
+          "scale": 2,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "product_id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "market_product",
+              "column": "id"
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "market_product_growth_minimum",
+          "definition": "CHECK ((growth_percent >= ('-100'::integer)::numeric))"
+        },
+        {
+          "name": "market_product_metrics_source_unique",
+          "definition": "UNIQUE (product_id, source_kind, source_reference)"
+        },
+        {
+          "name": "market_product_price_nonnegative",
+          "definition": "CHECK ((price_amount >= (0)::numeric))"
+        },
+        {
+          "name": "market_productmetrics_active_ads_count_check",
+          "definition": "CHECK ((active_ads_count >= 0))"
+        },
+        {
+          "name": "market_productmetrics_pkey",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "market_productmetrics_product_id_2249fa8a_fk_market_product_id",
+          "definition": "FOREIGN KEY (product_id) REFERENCES market_product(id) DEFERRABLE INITIALLY DEFERRED"
+        }
+      ]
+    },
+    {
+      "name": "market_shop",
+      "columns": [
+        {
+          "name": "source_kind",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 16,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "source_reference",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 500,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "observed_on",
+          "type": "date",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "imported_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "external_id",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 100,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "name",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 200,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "domain",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 253,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "UK"
+          ],
+          "references": []
+        },
+        {
+          "name": "initial",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 8,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "color",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 7,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "created_on",
+          "type": "date",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "category_id",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 80,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "market_category",
+              "column": "slug"
+            }
+          ]
+        },
+        {
+          "name": "country_id",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 2,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "market_country",
+              "column": "code"
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "market_shop_category_id_13f3c043_fk_market_category_slug",
+          "definition": "FOREIGN KEY (category_id) REFERENCES market_category(slug) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "market_shop_country_id_92d92f79_fk_market_country_code",
+          "definition": "FOREIGN KEY (country_id) REFERENCES market_country(code) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "market_shop_domain_key",
+          "definition": "UNIQUE (domain)"
+        },
+        {
+          "name": "market_shop_domain_normalized",
+          "definition": "CHECK ((((domain)::text = lower(TRIM(BOTH FROM domain))) AND (NOT ((domain)::text ~~ '%.'::text))))"
+        },
+        {
+          "name": "market_shop_pkey",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "market_shop_source_external_unique",
+          "definition": "UNIQUE (source_kind, external_id)"
+        }
+      ]
+    },
+    {
+      "name": "market_shopmedia",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int8",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 64,
+          "scale": 0,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "position",
+          "type": "int4",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "media_id",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 80,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "market_mediaasset",
+              "column": "key"
+            }
+          ]
+        },
+        {
+          "name": "shop_id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "market_shop",
+              "column": "id"
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "market_shop_media_asset_unique",
+          "definition": "UNIQUE (shop_id, media_id)"
+        },
+        {
+          "name": "market_shop_media_position_unique",
+          "definition": "UNIQUE (shop_id, \"position\")"
+        },
+        {
+          "name": "market_shopmedia_media_id_8890e912_fk_market_mediaasset_key",
+          "definition": "FOREIGN KEY (media_id) REFERENCES market_mediaasset(key) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "market_shopmedia_pkey",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "market_shopmedia_position_check",
+          "definition": "CHECK ((\"position\" >= 0))"
+        },
+        {
+          "name": "market_shopmedia_shop_id_07cbdbb6_fk_market_shop_id",
+          "definition": "FOREIGN KEY (shop_id) REFERENCES market_shop(id) DEFERRABLE INITIALLY DEFERRED"
+        }
+      ]
+    },
+    {
+      "name": "market_shopmetrics",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int8",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 64,
+          "scale": 0,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "source_kind",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 16,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "source_reference",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 500,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "observed_on",
+          "type": "date",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "imported_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "value_kind",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 16,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "currency",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 3,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "daily_revenue_estimate_amount",
+          "type": "numeric",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 16,
+          "scale": 2,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "monthly_visits_count",
+          "type": "int8",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 64,
+          "scale": 0,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "growth_30d_percent",
+          "type": "numeric",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 10,
+          "scale": 2,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "active_ads_count",
+          "type": "int4",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "total_ads_count",
+          "type": "int4",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "reported_products_count",
+          "type": "int4",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": 32,
+          "scale": 0,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "trend",
+          "type": "jsonb",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "shop_id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "market_shop",
+              "column": "id"
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "market_shop_growth_minimum",
+          "definition": "CHECK ((growth_30d_percent >= ('-100'::integer)::numeric))"
+        },
+        {
+          "name": "market_shop_metrics_source_unique",
+          "definition": "UNIQUE (shop_id, source_kind, source_reference)"
+        },
+        {
+          "name": "market_shop_revenue_nonnegative",
+          "definition": "CHECK ((daily_revenue_estimate_amount >= (0)::numeric))"
+        },
+        {
+          "name": "market_shopmetrics_active_ads_count_check",
+          "definition": "CHECK ((active_ads_count >= 0))"
+        },
+        {
+          "name": "market_shopmetrics_monthly_visits_count_check",
+          "definition": "CHECK ((monthly_visits_count >= 0))"
+        },
+        {
+          "name": "market_shopmetrics_pkey",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "market_shopmetrics_reported_products_count_check",
+          "definition": "CHECK ((reported_products_count >= 0))"
+        },
+        {
+          "name": "market_shopmetrics_shop_id_1427c927_fk_market_shop_id",
+          "definition": "FOREIGN KEY (shop_id) REFERENCES market_shop(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "market_shopmetrics_total_ads_count_check",
+          "definition": "CHECK ((total_ads_count >= 0))"
+        }
+      ]
+    },
+    {
+      "name": "market_tag",
+      "columns": [
+        {
+          "name": "slug",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 100,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "label",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 120,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        }
+      ],
+      "constraints": [
+        {
+          "name": "market_tag_pkey",
+          "definition": "PRIMARY KEY (slug)"
+        }
+      ]
+    },
+    {
+      "name": "workspaces_projectbrief",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "created_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "idea",
+          "type": "text",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "customer_description",
+          "type": "text",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "audience",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 16,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "market",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 120,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "budget_band",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 120,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "goal",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 16,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "goal_note",
+          "type": "text",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "completed_at",
+          "type": "timestamptz",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "workspace_id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK",
+            "UK"
+          ],
+          "references": [
+            {
+              "table": "workspaces_workspace",
+              "column": "id"
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "workspaces_projectbr_workspace_id_3e3f5167_fk_workspace",
+          "definition": "FOREIGN KEY (workspace_id) REFERENCES workspaces_workspace(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "workspaces_projectbrief_pkey",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "workspaces_projectbrief_workspace_id_key",
+          "definition": "UNIQUE (workspace_id)"
+        }
+      ]
+    },
+    {
+      "name": "workspaces_savedad",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "created_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "ad_id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "market_ad",
+              "column": "id"
+            }
+          ]
+        },
+        {
+          "name": "workspace_id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "workspaces_workspace",
+              "column": "id"
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "unique_saved_ad",
+          "definition": "UNIQUE (workspace_id, ad_id)"
+        },
+        {
+          "name": "workspaces_savedad_ad_id_a6ff43f8_fk_market_ad_id",
+          "definition": "FOREIGN KEY (ad_id) REFERENCES market_ad(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "workspaces_savedad_pkey",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "workspaces_savedad_workspace_id_1351de3a_fk_workspace",
+          "definition": "FOREIGN KEY (workspace_id) REFERENCES workspaces_workspace(id) DEFERRABLE INITIALLY DEFERRED"
+        }
+      ]
+    },
+    {
+      "name": "workspaces_savedproduct",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "created_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "product_id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "market_product",
+              "column": "id"
+            }
+          ]
+        },
+        {
+          "name": "workspace_id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "workspaces_workspace",
+              "column": "id"
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "unique_saved_product",
+          "definition": "UNIQUE (workspace_id, product_id)"
+        },
+        {
+          "name": "workspaces_savedprod_product_id_4cb10cee_fk_market_pr",
+          "definition": "FOREIGN KEY (product_id) REFERENCES market_product(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "workspaces_savedprod_workspace_id_3025219f_fk_workspace",
+          "definition": "FOREIGN KEY (workspace_id) REFERENCES workspaces_workspace(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "workspaces_savedproduct_pkey",
+          "definition": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "name": "workspaces_savedreport",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "created_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "name",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 160,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "report_type",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 16,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "period_days",
+          "type": "int2",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 16,
+          "scale": 0,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "filters",
+          "type": "jsonb",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "workspace_id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "workspaces_workspace",
+              "column": "id"
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "report_supported_period",
+          "definition": "CHECK ((period_days = ANY (ARRAY[7, 30, 90])))"
+        },
+        {
+          "name": "workspaces_savedrepo_workspace_id_35b42147_fk_workspace",
+          "definition": "FOREIGN KEY (workspace_id) REFERENCES workspaces_workspace(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "workspaces_savedreport_period_days_check",
+          "definition": "CHECK ((period_days >= 0))"
+        },
+        {
+          "name": "workspaces_savedreport_pkey",
+          "definition": "PRIMARY KEY (id)"
+        }
+      ]
+    },
+    {
+      "name": "workspaces_savedshop",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "created_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "shop_id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "market_shop",
+              "column": "id"
+            }
+          ]
+        },
+        {
+          "name": "workspace_id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "workspaces_workspace",
+              "column": "id"
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "unique_saved_shop",
+          "definition": "UNIQUE (workspace_id, shop_id)"
+        },
+        {
+          "name": "workspaces_savedshop_pkey",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "workspaces_savedshop_shop_id_935ea7e4_fk_market_shop_id",
+          "definition": "FOREIGN KEY (shop_id) REFERENCES market_shop(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "workspaces_savedshop_workspace_id_7bfb1a78_fk_workspace",
+          "definition": "FOREIGN KEY (workspace_id) REFERENCES workspaces_workspace(id) DEFERRABLE INITIALLY DEFERRED"
+        }
+      ]
+    },
+    {
+      "name": "workspaces_shopwatch",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "created_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "enabled",
+          "type": "bool",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "shop_id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "market_shop",
+              "column": "id"
+            }
+          ]
+        },
+        {
+          "name": "workspace_id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "workspaces_workspace",
+              "column": "id"
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "unique_shop_watch",
+          "definition": "UNIQUE (workspace_id, shop_id)"
+        },
+        {
+          "name": "workspaces_shopwatch_pkey",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "workspaces_shopwatch_shop_id_fbcf813c_fk_market_shop_id",
+          "definition": "FOREIGN KEY (shop_id) REFERENCES market_shop(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "workspaces_shopwatch_workspace_id_fd167cad_fk_workspace",
+          "definition": "FOREIGN KEY (workspace_id) REFERENCES workspaces_workspace(id) DEFERRABLE INITIALLY DEFERRED"
+        }
+      ]
+    },
+    {
+      "name": "workspaces_workspace",
+      "columns": [
+        {
+          "name": "id",
+          "type": "uuid",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "created_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "name",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 160,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "owner_id",
+          "type": "int8",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 64,
+          "scale": 0,
+          "keys": [
+            "FK"
+          ],
+          "references": [
+            {
+              "table": "accounts_user",
+              "column": "id"
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "workspaces_workspace_owner_id_d8b120c0_fk_accounts_user_id",
+          "definition": "FOREIGN KEY (owner_id) REFERENCES accounts_user(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "workspaces_workspace_pkey",
+          "definition": "PRIMARY KEY (id)"
+        }
+      ]
+    }
+  ]
+}

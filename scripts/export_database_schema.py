@@ -15,7 +15,7 @@ output.mkdir(parents=True, exist_ok=True)
 groups = {
     "catalog": ["market_category", "market_country", "market_mediaasset", "market_shop", "market_product", "market_ad", "market_tag", "market_ad_tags", "market_shopmedia"],
     "metrics": ["market_shopmetrics", "market_productmetrics", "market_admetrics"],
-    "workspaces": ["accounts_user", "workspaces_workspace", "workspaces_projectbrief", "workspaces_savedad", "workspaces_savedproduct", "workspaces_savedshop", "workspaces_shopwatch", "workspaces_savedreport"],
+    "workspaces": ["accounts_user", "accounts_emailverification", "workspaces_workspace", "workspaces_projectbrief", "workspaces_savedad", "workspaces_savedproduct", "workspaces_savedshop", "workspaces_shopwatch", "workspaces_savedreport"],
 }
 
 def node_id(name):
@@ -58,7 +58,7 @@ for title, names in groups.items():
     markdown.extend(["## " + title.title(), "", "```mermaid", source.rstrip(), "```", ""])
 markdown.extend(["## All application columns and database constraints", "", "Composite UNIQUE constraints appear under each table; individual columns are marked UK only when individually unique.", ""])
 for table in schema["tables"]:
-    if not table["name"].startswith(("market_", "workspaces_", "accounts_user")):
+    if not table["name"].startswith(("market_", "workspaces_", "accounts_")):
         continue
     markdown.extend(["### " + table["name"], "", "| Column | PostgreSQL type | Nullable | Keys | References |", "| --- | --- | --- | --- | --- |"])
     for column in table["columns"]:

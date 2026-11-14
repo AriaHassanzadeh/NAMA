@@ -75,3 +75,6 @@
 .solar-portal{direction:ltr;color-scheme:dark}.solar-portal[data-theme=light]{color-scheme:light}.solar-portal .nama-logotype{font-family:var(--font-anton),Impact,sans-serif;font-weight:400}.solar-portal .icon{display:block;width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}.solar-portal button{font-family:inherit;cursor:pointer}.solar-portal button:disabled{cursor:default}.solar-planet[aria-pressed=true]{border-color:var(--planet-accent)}
 .solar-portal .solar-enter-hint{inset-inline:0;margin-inline:auto;inline-size:max-content;max-inline-size:calc(100vw - 32px);transform:none}
 .solar-motion-toggle .icon{width:15px;height:15px}
+.solar-auth-link{display:inline-flex;align-items:center;min-height:36px;padding:8px 14px;margin-inline-start:8px;border:1px solid #e12c3559;border-radius:20px;font:10px/1.6 var(--font-vietnam),sans-serif;color:var(--solar-ink);text-decoration:none;background:#e12c350b;white-space:nowrap}
+.solar-auth-link:hover{border-color:#e12c35;background:#e12c351a}
+@media(max-width:480px){.solar-auth-link{font-size:9px;min-height:32px;padding:7px 12px;margin-inline-start:5px}.solar-edition{display:none}}

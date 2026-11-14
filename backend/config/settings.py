@@ -61,6 +61,20 @@ SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = "Lax"
 CSRF_COOKIE_SAMESITE = "Lax"
 
+# Local development writes messages into the ignored backend bind mount. Select
+# Django's SMTP backend through environment variables when a mail server exists.
+EMAIL_BACKEND = os.environ.get("EMAIL_BACKEND", "django.core.mail.backends.filebased.EmailBackend")
+EMAIL_FILE_PATH = BASE_DIR / ".local-emails"
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "localhost")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "true").lower() == "true"
+EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL", "false").lower() == "true"
+EMAIL_TIMEOUT = int(os.environ.get("EMAIL_TIMEOUT", "10"))
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "NAMA Analyze <no-reply@nama.local>")
+ACCOUNT_VERIFICATION_ORIGIN = os.environ.get("ACCOUNT_VERIFICATION_ORIGIN", "http://localhost:3000")
+
 SPECTACULAR_SETTINGS = {
     "TITLE": "NAMA Analyze Demo API",
     "DESCRIPTION": "Labelled illustrative data, not verified market intelligence. Private workspace operations use Django sessions and CSRF.",

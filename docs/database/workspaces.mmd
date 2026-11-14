@@ -12,6 +12,17 @@ erDiagram
         bool is_staff
         bool is_active
         timestamptz date_joined
+        bool email_verification_required
+        timestamptz email_verified_at "nullable"
+    }
+    accountsEmailverification["accounts_emailverification"] {
+        int8 id PK
+        varchar email "max 254"
+        varchar token_hash UK "max 64"
+        timestamptz sent_at
+        timestamptz expires_at
+        timestamptz consumed_at "nullable"
+        int8 user_id FK, UK
     }
     workspacesWorkspace["workspaces_workspace"] {
         uuid id PK
@@ -82,6 +93,7 @@ erDiagram
     marketShop["market_shop"] {
         uuid id PK
     }
+    accountsUser ||--o| accountsEmailverification : "user_id"
     workspacesWorkspace ||--o| workspacesProjectbrief : "workspace_id"
     marketAd ||--o{ workspacesSavedad : "ad_id"
     workspacesWorkspace ||--o{ workspacesSavedad : "workspace_id"

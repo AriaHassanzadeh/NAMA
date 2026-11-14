@@ -194,6 +194,17 @@ erDiagram
         bool is_staff
         bool is_active
         timestamptz date_joined
+        bool email_verification_required
+        timestamptz email_verified_at "nullable"
+    }
+    accountsEmailverification["accounts_emailverification"] {
+        int8 id PK
+        varchar email "max 254"
+        varchar token_hash UK "max 64"
+        timestamptz sent_at
+        timestamptz expires_at
+        timestamptz consumed_at "nullable"
+        int8 user_id FK, UK
     }
     workspacesWorkspace["workspaces_workspace"] {
         uuid id PK
@@ -264,6 +275,7 @@ erDiagram
     marketShop["market_shop"] {
         uuid id PK
     }
+    accountsUser ||--o| accountsEmailverification : "user_id"
     workspacesWorkspace ||--o| workspacesProjectbrief : "workspace_id"
     marketAd ||--o{ workspacesSavedad : "ad_id"
     workspacesWorkspace ||--o{ workspacesSavedad : "workspace_id"
@@ -281,6 +293,25 @@ erDiagram
 
 Composite UNIQUE constraints appear under each table; individual columns are marked UK only when individually unique.
 
+### accounts_emailverification
+
+| Column | PostgreSQL type | Nullable | Keys | References |
+| --- | --- | --- | --- | --- |
+| id | int8 | no | PK |  |
+| email | varchar(254) | no |  |  |
+| token_hash | varchar(64) | no | UK |  |
+| sent_at | timestamptz | no |  |  |
+| expires_at | timestamptz | no |  |  |
+| consumed_at | timestamptz | yes |  |  |
+| user_id | int8 | no | FK, UK | accounts_user.id |
+
+```sql
+accounts_emailverification_pkey: PRIMARY KEY (id)
+accounts_emailverification_token_hash_key: UNIQUE (token_hash)
+accounts_emailverification_user_id_4f5b1661_fk_accounts_user_id: FOREIGN KEY (user_id) REFERENCES accounts_user(id) DEFERRABLE INITIALLY DEFERRED
+accounts_emailverification_user_id_key: UNIQUE (user_id)
+```
+
 ### accounts_user
 
 | Column | PostgreSQL type | Nullable | Keys | References |
@@ -296,6 +327,8 @@ Composite UNIQUE constraints appear under each table; individual columns are mar
 | is_staff | bool | no |  |  |
 | is_active | bool | no |  |  |
 | date_joined | timestamptz | no |  |  |
+| email_verification_required | bool | no |  |  |
+| email_verified_at | timestamptz | yes |  |  |
 
 ```sql
 accounts_user_pkey: PRIMARY KEY (id)

@@ -167,18 +167,19 @@ try {
   await waitForOrbitState("paused");
   console.log("PASS hovering or focusing a media button pauses orbit movement");
 
-  const initialUrl = await evaluate("location.href");
   await press("Enter", "Enter", 13);
   await waitFor(() => evaluate(`JSON.parse(localStorage.getItem(${JSON.stringify(store)}))?.source === 'instagram'`), "keyboard source selection");
-  await waitFor(() => evaluate("[...document.querySelectorAll('[role=status]')].some(node => node.textContent.includes('Instagram'))"), "start feedback");
-  assert.equal(await evaluate("location.href"), initialUrl);
+  await waitFor(() => evaluate("location.pathname.replace(/\\/$/, '') === '/start/idea' && !!document.querySelector('#entryAnswer')"), "keyboard navigation to Idea");
+  await evaluate("document.querySelector('.entry-back').click()");
+  await waitForLanding();
   await clearPlanetInteraction();
   await evaluate("document.querySelector('.solar-core').click()");
-  await delay(150);
-  assert.equal(await evaluate("location.href"), initialUrl);
+  await waitFor(() => evaluate("location.pathname.replace(/\\/$/, '') === '/start/idea' && !!document.querySelector('#entryAnswer')"), "NAMA navigation to Idea");
   const selectedSource = await evaluate(`JSON.parse(localStorage.getItem(${JSON.stringify(store)})).source`);
-  assert.equal(typeof selectedSource, "string");
-  console.log("PASS keyboard start stores selected media locally, provides feedback and keeps the URL unchanged");
+  assert.equal(selectedSource, "nama");
+  await evaluate("document.querySelector('.entry-brand').click()");
+  await waitForLanding();
+  console.log("PASS keyboard/media and NAMA start navigate to Idea; back/brand return to the entrance and source is retained");
 
   await evaluate("document.querySelector('.theme-toggle').click()");
   await waitFor(() => evaluate("document.querySelector('.solar-portal').dataset.theme === 'light'"), "light theme");

@@ -1,5 +1,70 @@
 # NAMA Analyze status
 
+## Idea, email authentication and local restart — 2026-11-14
+
+The user approved resuming the frontend, then expanded this checkpoint to include a solar **Sign in / Sign up** button, login, signup and email verification. They selected email/password with a verification email. Work began on November 12; an automatic approval-service usage-limit failure prevented the final migration/check command from executing then. On November 14 the user requested another project run; Docker Desktop was stopped, so it was started in the background and the current stack was rebuilt and brought up successfully. This entry supersedes the older pending-frontend notes below.
+
+- Branch: `work/frontend-idea`, based on the preserved `work/database-demo-api` checkpoint.
+- Solar entrance: http://localhost:3000/
+- Idea review page: http://localhost:3000/start/idea
+- Sign in: http://localhost:3000/auth/login/
+- Sign up: http://localhost:3000/auth/signup/
+- Email confirmation/resend: http://localhost:3000/auth/verify/
+- Health: http://localhost:3000/health/; API explorer: http://localhost:3000/api/v1/docs/
+- Frontend, backend and PostgreSQL are healthy. PostgreSQL remains on `127.0.0.1:5433` with its existing named volume. Personal `.vscode/`, local environments, credentials and reference sources were preserved.
+
+### Completed UI and API behavior
+
+- `frontend/src/app/start/`, `components/entry/idea-discovery.tsx` and its CSS implement only the Idea question using the supplied readable reference: shared NAMA mark/fonts, dark default, light theme, RTL, three-step progress, API example chips and a bottom composer in normal document flow.
+- `components/entry/entry-store.ts` extracts the existing `nama-analyze-entry-v1` store without dropping unknown fields. Theme, motion preference and media source survive navigation. Idea saves while typing, restores after reload/back/forward, validates a trimmed minimum of 5 characters and a maximum of 2000, supports Enter/Shift+Enter and respects IME composition. Editing invalidates the saved acknowledgement and prior local completion. Unavailable storage falls back to memory and clearly explains that a reload cannot restore it.
+- Solar/media Start actions now navigate to `/start/idea`. A valid Idea submission saves the draft and announces success; Customer/Goal progress controls remain disabled. No nonexistent Customer/Home route or completed project brief is presented.
+- `components/query-provider.tsx`, `lib/api/entry-options.ts` connect the example chips to the existing same-origin demo endpoint with runtime validation and explicit loading/error/retry/empty states. Free entry remains usable when the examples fail. Answers are not placed in URLs or uploaded to private workspaces at this checkpoint.
+- `frontend/src/app/auth/`, `components/auth/`, `lib/api/auth.ts` implement the requested matching logo/theme for login, signup, password visibility, confirmation validation, pending email state, explicit email confirmation, resend, signed-in account state and logout. Login success enters the existing Idea page. Unsafe calls fetch a CSRF token first and use Django HttpOnly sessions; passwords and verification tokens are absent from localStorage.
+- `backend/accounts/models.py`, `api.py`, `verification.py`, `tests.py`, migration `0002_emailverification_user_email_verification_required_and_more.py`: email/password signup, Django password validation, case-insensitive unique nonblank emails, inactive/unverified new users and compatible legacy username/admin users. A shared normalized lookup also supports preserved legacy emails with surrounding spaces without rewriting those rows.
+- Verification tokens use 32 random bytes, store only a SHA-256 digest bound to the recipient email, expire after 24 hours and work once. Resend serializes per user, has a 60-second cooldown and invalidates an older link. Opening the link does not activate an account; an explicit CSRF-protected POST does. Confirmation does not automatically log in. Signup/resend give generic responses and authentication has IP, identity and global limits. Development throttles use process-local cache; production shared-cache/rate-limit work is deferred.
+- The additive migration checks duplicate normalized emails before changing schema. It applied successfully at startup; no existing account, user import or persistent volume was removed. Actual database metadata now contains 30 physical tables, including `accounts_emailverification`; the three ERDs and all application columns/constraints were refreshed.
+- `backend/config/api_schema.py`, `docs/api/openapi.json`, `frontend/src/lib/api/generated.d.ts` document 34 API paths, including email auth and CSRF. `scripts/export_database_schema.py` includes the new verification table in the actual schema documentation.
+- `compose.yaml`, `.env.example`, backend email settings, `.gitignore`, `backend/.dockerignore` configure file email for local development and environment-based SMTP later. No real SMTP credentials or external email subscription were added. `scripts/read_local_email.py` opens the newest matching local message; private links are only printed with an explicit `--json` flag for automation.
+- `scripts/auth_check.mjs`, `scripts/idea_check.mjs`, updated `scripts/landing_check.mjs`, `README.md`, `docs/API.md` provide actual behavior checks and current local instructions.
+
+New pinned UI dependencies: React Hook Form 7.92.0, resolvers 7.0.6, Zod 4.6.7, TanStack Query 5.107.1 and Lucide React 1.72.0. Stable versions/React peer ranges were checked against the official npm registry and [form](https://react-hook-form.com/get-started), [query](https://tanstack.com/query/latest/docs/framework/react/installation), [Zod](https://zod.dev/) and [Lucide](https://lucide.dev/guide/packages/lucide-react) documentation. Django's [password validation](https://docs.djangoproject.com/en/5.2/topics/auth/passwords/), [file email backend](https://docs.djangoproject.com/en/5.2/topics/email/#file-backend) and [database constraints](https://docs.djangoproject.com/en/5.2/ref/models/constraints/#uniqueconstraint) were checked for the auth implementation. Existing framework/runtime pins remain unchanged.
+
+### Actual verification results
+
+| Exact command/check | Result |
+| --- | --- |
+| `docker compose config --quiet` | Valid configuration, without printing resolved secrets |
+| `docker compose up -d --build --wait` | Both current images built; all three services healthy; pending additive auth migration applied at startup |
+| `docker compose build` then `docker compose up -d --wait` | Final verified source packaged into both images and restarted healthy |
+| `docker compose exec -T backend python manage.py migrate --noinput` | Final repeat found no pending migrations |
+| `docker compose exec -T backend python manage.py check` | No issues |
+| `docker compose exec -T backend python manage.py test --verbosity 1` | Final run: all 50 tests passed against PostgreSQL; temporary test database removed |
+| `docker compose exec -T backend python manage.py makemigrations --check --dry-run` | No model drift |
+| `docker compose exec -T backend python manage.py spectacular --file /tmp/nama-openapi.json --format openapi-json --validate --fail-on-warn` | Zero schema warnings/errors; 34 paths; copied to `docs/api/openapi.json` |
+| `npm.cmd exec --yes --package=openapi-typescript@7.13.0 --package=typescript@5.9.3 -- openapi-typescript docs/api/openapi.json --output frontend/src/lib/api/generated.d.ts` | Generated updated frontend types in the isolated compatible tool environment |
+| `docker compose run --rm --no-deps frontend npm run lint` | Zero warnings/errors |
+| `docker compose run --rm --no-deps frontend npm run typecheck` | Passed after correcting the auth mutation's union response inference |
+| `npm.cmd --prefix frontend run typecheck` | Local editor route declarations regenerated and TypeScript passed |
+| `docker compose run --rm --no-deps frontend npm run build` | Passed; solar, health, Idea and all three auth routes generated |
+| `docker compose run --rm --no-deps frontend npm audit` | Zero reported vulnerabilities |
+| `node scripts/auth_check.mjs` | Real signup/local verification/verified login, replay rejection, missing-link recovery, disabled pending submit, password confirmation/toggle, rate/network recovery, keyboard login, session HttpOnly/CSRF and no credentials in localStorage passed |
+| `node scripts/landing_check.mjs` | All original motion/theme/keyboard/layout checks plus real Idea navigation passed |
+| `node scripts/idea_check.mjs` | Draft/example/validation/Enter/Shift+Enter/IME/reload/back/forward/error/retry/empty/blocked-storage cases passed; both themes at 1440x1000, 1280x900, 768x1024, 390x844 and 844x390 |
+| `python scripts/smoke_check.py` | Direct/proxied database health and solar HTML/RTL/logo passed |
+| `python scripts/api_smoke_check.py` | Existing 6/8/10 demo catalog, media/export, reports/Home/options, ownership rejection, 34-path schema and bundled Swagger assets passed |
+| `python scripts/export_database_schema.py` | 30 actual PostgreSQL tables and three ERDs exported, including all verification columns/constraints |
+| `git diff --check` | Passed |
+
+Auth was visually inspected in dark/light desktop/mobile screenshots. Idea was compared with the actual readable reference at desktop/mobile sizes. Its light labels were darkened for readable contrast, and composer tools/send placement was corrected to match the reference. A Chrome/CDP `captureBeyondViewport` artifact initially showed an offset/crop despite correct DOM bounds; viewport-only captures and explicit root/center bounds checks confirmed the correct rendered layout. The browser harness was also corrected to await the current mounted form and distinct failure responses instead of reading a prior route during navigation. No remaining browser exception was observed.
+
+Final browser artifacts (outside Git): `C:\Users\Admin\AppData\Local\Temp\nama-analyze-auth-KQBRZW`, `nama-analyze-landing-N1XgeC`, `nama-analyze-idea-wALnVU`. Earlier reference-comparison artifacts: `C:\Users\Admin\AppData\Local\Temp\nama-analyze-idea-8RfwKB`.
+
+### Local verification mail and next review
+
+Default delivery is **local file email**, not a real inbox. After signup, run `python scripts/read_local_email.py --recipient your-email@example.com --open`, click **تأیید ایمیل**, then sign in. The UI explicitly labels local delivery. SMTP settings are documented but real inbox delivery has not been configured or tested. Local browser checks leave isolated `example.test` accounts for inspection; no shared demo credentials were created.
+
+No remaining local startup/auth/Idea check blocker. Password recovery, authenticated project-brief upload, Customer/Goal/Home UI and production delivery remain separate work. **Next action:** user reviews solar → Idea and solar → sign-in/signup/verification before the next Customer page. Do not implement the remaining frontend pages without that review.
+
 ## Database and demo API review checkpoint — 2026-11-12
 
 The user approved continuing after the landing, then explicitly requested the database and APIs across the Analyze pages before further frontend implementation. This supersedes the earlier page-order checkpoint below. The next Idea page has not been implemented. Explanations are in English at the user's request; the application remains Persian RTL.

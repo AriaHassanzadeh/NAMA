@@ -134,6 +134,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/signup/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Email/password signup. Verification is required for new accounts; response does not disclose whether the address already exists. */
+        post: operations["auth_signup_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/verification/confirm/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Explicit POST activates an unverified signup. Single-use token expires after 24 hours. Verification does not log the user in. */
+        post: operations["auth_verification_confirm_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/auth/verification/resend/": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Generic response; a 60-second cooldown prevents repeated delivery. A newer email invalidates the older verification link. */
+        post: operations["auth_verification_resend_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/demo/entry-options/": {
         parameters: {
             query?: never;
@@ -579,6 +630,9 @@ export interface components {
          * @enum {string}
          */
         AudienceEnum: "consumer" | "business" | "both";
+        AuthDetail: {
+            detail: string;
+        };
         /** @enum {unknown} */
         BlankEnum: "";
         BookmarkList: {
@@ -623,6 +677,12 @@ export interface components {
             products: number;
             shops: number;
         };
+        /**
+         * @description * `local` - local
+         *     * `smtp` - smtp
+         * @enum {string}
+         */
+        DeliveryModeEnum: "local" | "smtp";
         /** @enum {string} */
         DemoSourceKindEnum: "demo";
         Distribution: {
@@ -668,7 +728,9 @@ export interface components {
             icon: string;
         };
         Login: {
-            username: string;
+            /** Format: email */
+            email?: string;
+            username?: string;
             password: string;
         };
         MediaAsset: {
@@ -1019,6 +1081,12 @@ export interface components {
             /** Format: date-time */
             updated_at: string;
         };
+        Signup: {
+            /** Format: email */
+            email: string;
+            password: string;
+            display_name?: string;
+        };
         /**
          * @description * `demo` - Demo
          *     * `manual` - Manual
@@ -1040,6 +1108,7 @@ export interface components {
             id: number;
             username: string;
             display_name: string;
+            email: string;
         };
         /**
          * @description * `illustrative` - Illustrative
@@ -1048,6 +1117,17 @@ export interface components {
          * @enum {string}
          */
         ValueKindEnum: "illustrative" | "observed" | "estimated";
+        VerificationConfirm: {
+            token: string;
+        };
+        VerificationPending: {
+            detail: string;
+            delivery_mode: components["schemas"]["DeliveryModeEnum"];
+        };
+        VerificationResend: {
+            /** Format: email */
+            email: string;
+        };
         Workspace: {
             /** Format: uuid */
             readonly id: string;
@@ -1273,6 +1353,98 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SessionIdentity"];
+                };
+            };
+        };
+    };
+    auth_signup_create: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Use csrfToken from /auth/csrf/ with its cookie; login rotates it and returns the next token. */
+                "X-CSRFToken": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["Signup"];
+                "application/x-www-form-urlencoded": components["schemas"]["Signup"];
+                "multipart/form-data": components["schemas"]["Signup"];
+            };
+        };
+        responses: {
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VerificationPending"];
+                };
+            };
+        };
+    };
+    auth_verification_confirm_create: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Use csrfToken from /auth/csrf/ with its cookie; login rotates it and returns the next token. */
+                "X-CSRFToken": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerificationConfirm"];
+                "application/x-www-form-urlencoded": components["schemas"]["VerificationConfirm"];
+                "multipart/form-data": components["schemas"]["VerificationConfirm"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthDetail"];
+                };
+            };
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuthDetail"];
+                };
+            };
+        };
+    };
+    auth_verification_resend_create: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Use csrfToken from /auth/csrf/ with its cookie; login rotates it and returns the next token. */
+                "X-CSRFToken": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerificationResend"];
+                "application/x-www-form-urlencoded": components["schemas"]["VerificationResend"];
+                "multipart/form-data": components["schemas"]["VerificationResend"];
+            };
+        };
+        responses: {
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VerificationPending"];
                 };
             };
         };

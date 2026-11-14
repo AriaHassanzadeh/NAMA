@@ -1,38 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useSyncExternalStore, type CSSProperties, type ReactNode } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useSyncExternalStore, type CSSProperties, type ReactNode } from "react";
+import { updateEntryState, useEntryState } from "./entry-store";
 import "./solar-entrance.css";
 
-const STORE = "nama-analyze-entry-v1";
-const CHANGE = "nama:entry-change";
-let memorySnapshot = "{}";
-function subscribe(callback: () => void) {
-  window.addEventListener("storage", callback);
-  window.addEventListener(CHANGE, callback);
-  return () => { window.removeEventListener("storage", callback); window.removeEventListener(CHANGE, callback); };
-}
-function getSnapshot() {
-  try { return window.localStorage.getItem(STORE) ?? memorySnapshot; } catch { return memorySnapshot; }
-}
-function parseSnapshot(snapshot: string): Record<string, unknown> {
-  try {
-    const value: unknown = JSON.parse(snapshot);
-    return typeof value === "object" && value !== null && !Array.isArray(value) ? value as Record<string, unknown> : {};
-  } catch { return {}; }
-}
-function updatePreference(patch: Record<string, unknown>) {
-  memorySnapshot = JSON.stringify({ ...parseSnapshot(getSnapshot()), ...patch });
-  try { window.localStorage.setItem(STORE, memorySnapshot); } catch { /* Keep preferences in memory when storage is unavailable. */ }
-  window.dispatchEvent(new Event(CHANGE));
-}
 function subscribeMotion(callback: () => void) {
   const query = window.matchMedia("(prefers-reduced-motion: reduce)");
   query.addEventListener("change", callback);
   return () => query.removeEventListener("change", callback);
 }
 const motionSnapshot = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const serverSnapshot = () => "{}";
 
 const media = [
   { key: "instagram", name: "Instagram", label: "آغاز بررسی بازار", accent: "#e87da9" },
@@ -78,15 +58,14 @@ function ControlIcon({ children }: { children: ReactNode }) {
 const arrow = <path d="M18 12H6m6 6-6-6 6-6" />;
 
 export function SolarEntrance() {
-  const snapshot = useSyncExternalStore(subscribe, getSnapshot, serverSnapshot);
-  const preferences = parseSnapshot(snapshot);
+  const router = useRouter();
+  const preferences = useEntryState();
   const theme = preferences.theme === "light" ? "light" : "dark";
   const reducedMotion = useSyncExternalStore(subscribeMotion, motionSnapshot, () => true);
   const paused = preferences.paused === true;
-  const [selection, setSelection] = useState("");
-  function selectSource(source: string, name: string) {
-    updatePreference({ source });
-    setSelection(`${name} برای شروع انتخاب شد.`);
+  function selectSource(source: string) {
+    updateEntryState({ source });
+    router.push("/start/idea");
   }
   const motionLabel = reducedMotion ? "حرکت مطابق تنظیم کاهش انیمیشن غیرفعال است" : paused ? "ادامهٔ حرکت مدارها" : "توقف حرکت مدارها";
   return (
@@ -95,12 +74,13 @@ export function SolarEntrance() {
       <div className="solar-stars" aria-hidden="true">{stars.map(({ index, style }) => <i key={index} className={`solar-star ${index % 17 === 0 ? "solar-star--shimmer" : ""} ${index % 43 === 0 ? "solar-star--cross" : ""}`} style={style} />)}</div>
       <div className="solar-atmosphere" aria-hidden="true" />
       <div className="solar-tools">
-        <button type="button" className="theme-toggle" aria-label={`تغییر به حالت ${theme === "dark" ? "روشن" : "تاریک"}`} aria-pressed={theme === "dark"} onClick={() => updatePreference({ theme: theme === "dark" ? "light" : "dark" })}>
+        <button type="button" className="theme-toggle" aria-label={`تغییر به حالت ${theme === "dark" ? "روشن" : "تاریک"}`} aria-pressed={theme === "dark"} onClick={() => updateEntryState({ theme: theme === "dark" ? "light" : "dark" })}>
           <ControlIcon>{theme === "dark" ? <><circle cx="12" cy="12" r="4" /><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1 1m12 12 1 1M5 19l1-1M18 6l1-1" /></> : <path d="M20 14A8 8 0 0 1 10 4a8 8 0 1 0 10 10Z" />}</ControlIcon>
         </button>
-        <button type="button" className="solar-motion-toggle" aria-label={motionLabel} title={motionLabel} aria-pressed={paused || reducedMotion} disabled={reducedMotion} onClick={() => updatePreference({ paused: !paused })}>
+        <button type="button" className="solar-motion-toggle" aria-label={motionLabel} title={motionLabel} aria-pressed={paused || reducedMotion} disabled={reducedMotion} onClick={() => updateEntryState({ paused: !paused })}>
           <ControlIcon>{paused || reducedMotion ? <path d="m9 5 10 7-10 7V5Z" /> : <path d="M8 5v14M16 5v14" />}</ControlIcon>
         </button>
+        <Link className="solar-auth-link" href="/auth/login" lang="en" dir="ltr">Sign in / Sign up</Link>
       </div>
       <div className="solar-edition" aria-hidden="true"><span /><span>NAMA UNIVERSE</span></div>
       <section className="solar-system" aria-label="رسانه‌ها در مدار نما">
@@ -110,20 +90,20 @@ export function SolarEntrance() {
           {ring.planets.map(([index, phase]) => {
             const item = media[index];
             return <div key={item.key} className="solar-rotor" style={{ "--phase": `${phase}deg` } as CSSProperties}><div className="solar-distance"><div className="solar-counter">
-              <button type="button" className={`solar-planet solar-planet--${item.key}`} style={{ "--planet-accent": item.accent } as CSSProperties} aria-label={`${item.name} — ${item.label}`} aria-pressed={preferences.source === item.key} onClick={() => selectSource(item.key, item.name)}>
+              <button type="button" className={`solar-planet solar-planet--${item.key}`} style={{ "--planet-accent": item.accent } as CSSProperties} aria-label={`${item.name} — ${item.label}`} aria-pressed={preferences.source === item.key} onClick={() => selectSource(item.key)}>
                 <svg className="solar-media-mark" viewBox="0 0 24 24" fill="none" aria-hidden="true">{marks[item.key]}</svg>
                 <span className="solar-planet-tooltip"><strong lang="en">{item.name}</strong><small>{item.label}</small></span>
               </button>
             </div></div></div>;
           })}
         </div>)}
-        <div className="solar-center"><button type="button" className="solar-core" aria-label="شروع با نما" onClick={() => selectSource("nama", "نما")}>
+        <div className="solar-center"><button type="button" className="solar-core" aria-label="شروع با نما" onClick={() => selectSource("nama")}>
           <span className="solar-core-halo" aria-hidden="true" /><Image src="/mark.svg" alt="" width={91} height={91} priority /><span className="nama-logotype">NAMA</span><span className="solar-core-enter" aria-hidden="true"><ControlIcon>{arrow}</ControlIcon></span>
         </button></div>
       </section>
       <footer className="solar-footer">
         <span className="solar-signature" lang="en" dir="ltr">INTELLIGENCE. IN ORBIT.</span>
-        <button type="button" className="solar-enter-hint" onClick={() => selectSource("nama", "نما")}><span /><span role="status" aria-live="polite">{selection || "برای شروع، روی نما کلیک کن"}</span><ControlIcon>{arrow}</ControlIcon></button>
+        <button type="button" className="solar-enter-hint" onClick={() => selectSource("nama")}><span /><span>برای شروع، روی نما کلیک کن</span><ControlIcon>{arrow}</ControlIcon></button>
         <span className="solar-index" aria-hidden="true">01 <i /> NAMA</span>
       </footer>
     </main>

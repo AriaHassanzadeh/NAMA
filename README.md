@@ -2,7 +2,7 @@
 
 Personal Market Analyzor project. Milestone 01 provides a local Next.js + Django + PostgreSQL development foundation and a Persian RTL connection-status screen.
 
-The solar entrance remains available. At the user's request, work moved to the database and demo APIs before the next frontend pages. The database now contains labelled sample records; see [API documentation](docs/API.md) and [actual database diagrams/columns](docs/DATABASE.md). Idea, Customer, Goal and Analyze Home resume after this backend review. Start actions currently save the chosen entry source and show confirmation. The supplied `reference/` files remain design handoff material.
+The solar entrance now opens the Idea page at `/start/idea` and includes **Sign in / Sign up**. Idea uses the labelled mock example API, validates and saves a browser-local draft, and preserves the entry theme and media source. Email/password signup requires email verification before sign-in. These pages form a review checkpoint: submitting Idea saves it; Customer, Goal and Analyze Home follow after review. The database contains labelled sample records; see [API documentation](docs/API.md) and [actual database diagrams/columns](docs/DATABASE.md). The supplied `reference/` files remain design handoff material.
 
 ## Requirements and versions
 
@@ -35,6 +35,10 @@ The setup script generates random local credentials in ignored `.env` and preser
 Open:
 
 - Application: http://localhost:3000/
+- Idea page: http://localhost:3000/start/idea
+- Sign in: http://localhost:3000/auth/login/
+- Sign up: http://localhost:3000/auth/signup/
+- Email confirmation/resend: http://localhost:3000/auth/verify/
 - Connection-status screen: http://localhost:3000/health/
 - Health through Next.js: http://localhost:3000/api/v1/health/
 - Django health directly: http://localhost:8000/api/v1/health/
@@ -47,7 +51,19 @@ The status screen makes a same-origin `/api/v1/health/` request. A server-side N
 
 The Next development allowlist contains only `localhost` and `127.0.0.1`, so the development WebSocket and client hydration work from both local URLs.
 
-Django owns users, sessions, CSRF, authorization and future business data. Its development defaults keep session cookies HttpOnly and CSRF middleware enabled. This milestone has no authentication UI.
+Django owns users, sessions, CSRF, authorization and business data. Its development defaults keep session cookies HttpOnly and CSRF middleware enabled. Email/password forms use the same-origin API and fetch a fresh CSRF token before unsafe requests; passwords and verification tokens are never written to browser storage.
+
+## Local email verification
+
+The default file email backend writes messages to ignored `backend/.local-emails/`; it does **not** send messages to a real inbox. Sign up in the UI, then open the latest matching local verification email:
+
+```powershell
+python scripts/read_local_email.py --recipient your-email@example.com --open
+```
+
+The browser page requires an explicit **تأیید ایمیل** click. Verification links expire after 24 hours, work once and are replaced by a newer resend. Resend has a 60-second cooldown. Confirmation activates the account; sign in with the same email/password afterward. The local helper never prints the private link unless explicitly given `--json` for automated checks.
+
+For actual inbox delivery, set the documented `EMAIL_*` settings in ignored `.env`, select `django.core.mail.backends.smtp.EmailBackend`, set an appropriate sender and `ACCOUNT_VERIFICATION_ORIGIN`, then recreate backend with `docker compose up -d --wait backend`. SMTP credentials have not been configured or tested. Do not paste passwords or private verification links into Git.
 
 ## Daily commands
 
@@ -98,9 +114,13 @@ The browser check uses an installed Chrome plus Node's built-in WebSocket, with 
 ```powershell
 node scripts/browser_check.mjs
 node scripts/landing_check.mjs
+node scripts/idea_check.mjs
+node scripts/auth_check.mjs
 ```
 
-Set `CHROME_PATH` if Chrome is elsewhere. The health-screen check targets `/health/`; the landing check targets `/`. They cover the corresponding interactions, RTL, fonts, responsive layout and motion preferences. Screenshots are saved outside the repository in the temporary directory printed by each script. If Next misses a newly added route on the Windows bind mount, run `docker compose restart frontend`.
+Set `CHROME_PATH` if Chrome is elsewhere. The health-screen check targets `/health/`; the landing check targets `/`; the Idea check covers the mock API states, draft recovery, validation, keyboard/IME input and storage failures at `/start/idea`. The auth check creates one isolated local test account and verifies signup, local email confirmation, protected sessions and sign-in. It uses `localhost` to match the verification origin, keeps credentials/private links out of diagnostics and leaves the test account available for inspection. Checks also cover RTL, fonts, responsive layout and motion preferences. Screenshots are saved outside the repository in the temporary directory printed by each script. If Next misses a newly added route on the Windows bind mount, run `docker compose restart frontend`.
+
+Idea drafts use the existing `nama-analyze-entry-v1` browser storage key. No answer is sent in a URL or uploaded to Django at this checkpoint. When storage is blocked/full, the page explains that the draft only remains in the current tab; reload cannot restore that in-memory fallback.
 
 ## VS Code and native tools
 

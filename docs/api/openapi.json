@@ -409,6 +409,181 @@
                 }
             }
         },
+        "/api/v1/auth/signup/": {
+            "post": {
+                "operationId": "auth_signup_create",
+                "description": "Email/password signup. Verification is required for new accounts; response does not disclose whether the address already exists.",
+                "tags": [
+                    "auth"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Signup"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Signup"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Signup"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "202": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VerificationPending"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "X-CSRFToken",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Use csrfToken from /auth/csrf/ with its cookie; login rotates it and returns the next token."
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/verification/confirm/": {
+            "post": {
+                "operationId": "auth_verification_confirm_create",
+                "description": "Explicit POST activates an unverified signup. Single-use token expires after 24 hours. Verification does not log the user in.",
+                "tags": [
+                    "auth"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VerificationConfirm"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VerificationConfirm"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VerificationConfirm"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthDetail"
+                                }
+                            }
+                        },
+                        "description": ""
+                    },
+                    "400": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/AuthDetail"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "X-CSRFToken",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Use csrfToken from /auth/csrf/ with its cookie; login rotates it and returns the next token."
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/verification/resend/": {
+            "post": {
+                "operationId": "auth_verification_resend_create",
+                "description": "Generic response; a 60-second cooldown prevents repeated delivery. A newer email invalidates the older verification link.",
+                "tags": [
+                    "auth"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VerificationResend"
+                            }
+                        },
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VerificationResend"
+                            }
+                        },
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VerificationResend"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {}
+                ],
+                "responses": {
+                    "202": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VerificationPending"
+                                }
+                            }
+                        },
+                        "description": ""
+                    }
+                },
+                "parameters": [
+                    {
+                        "name": "X-CSRFToken",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Use csrfToken from /auth/csrf/ with its cookie; login rotates it and returns the next token."
+                    }
+                ]
+            }
+        },
         "/api/v1/demo/entry-options/": {
             "get": {
                 "operationId": "demo_entry_options_retrieve",
@@ -2829,6 +3004,17 @@
                 "type": "string",
                 "description": "* `consumer` - Consumer\n* `business` - Business\n* `both` - Both"
             },
+            "AuthDetail": {
+                "type": "object",
+                "properties": {
+                    "detail": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "detail"
+                ]
+            },
             "BlankEnum": {
                 "enum": [
                     ""
@@ -2980,6 +3166,14 @@
                     "products",
                     "shops"
                 ]
+            },
+            "DeliveryModeEnum": {
+                "enum": [
+                    "local",
+                    "smtp"
+                ],
+                "type": "string",
+                "description": "* `local` - local\n* `smtp` - smtp"
             },
             "DemoSourceKindEnum": {
                 "type": "string",
@@ -3157,6 +3351,11 @@
             "Login": {
                 "type": "object",
                 "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 254
+                    },
                     "username": {
                         "type": "string",
                         "maxLength": 150
@@ -3168,8 +3367,7 @@
                     }
                 },
                 "required": [
-                    "password",
-                    "username"
+                    "password"
                 ]
             },
             "MediaAsset": {
@@ -4415,6 +4613,29 @@
                     "updated_at"
                 ]
             },
+            "Signup": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 254
+                    },
+                    "password": {
+                        "type": "string",
+                        "writeOnly": true,
+                        "maxLength": 128
+                    },
+                    "display_name": {
+                        "type": "string",
+                        "maxLength": 150
+                    }
+                },
+                "required": [
+                    "email",
+                    "password"
+                ]
+            },
             "SourceKindEnum": {
                 "enum": [
                     "demo",
@@ -4471,10 +4692,14 @@
                     },
                     "display_name": {
                         "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
                     }
                 },
                 "required": [
                     "display_name",
+                    "email",
                     "id",
                     "username"
                 ]
@@ -4487,6 +4712,47 @@
                 ],
                 "type": "string",
                 "description": "* `illustrative` - Illustrative\n* `observed` - Observed\n* `estimated` - Estimated"
+            },
+            "VerificationConfirm": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string",
+                        "writeOnly": true,
+                        "maxLength": 200
+                    }
+                },
+                "required": [
+                    "token"
+                ]
+            },
+            "VerificationPending": {
+                "type": "object",
+                "properties": {
+                    "detail": {
+                        "type": "string"
+                    },
+                    "delivery_mode": {
+                        "$ref": "#/components/schemas/DeliveryModeEnum"
+                    }
+                },
+                "required": [
+                    "delivery_mode",
+                    "detail"
+                ]
+            },
+            "VerificationResend": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 254
+                    }
+                },
+                "required": [
+                    "email"
+                ]
             },
             "Workspace": {
                 "type": "object",

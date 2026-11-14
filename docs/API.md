@@ -61,7 +61,13 @@ Examples:
 
 ## Sessions and private workspaces
 
-Private endpoints require a Django session. There is no automatic/shared demo account and no token in localStorage. Create your own local Django account when testing private APIs:
+Private endpoints require a Django session. There is no automatic/shared demo account and no token in localStorage. The solar **Sign in / Sign up** button opens `/auth/login/`; `/auth/signup/` creates an email/password account that remains inactive until its email is verified. Default local delivery writes ignored email files rather than sending to an inbox:
+
+```powershell
+python scripts/read_local_email.py --recipient your-email@example.com --open
+```
+
+Open the local message and explicitly confirm at `/auth/verify#token=...`, then sign in. The fragment is removed after the confirmation attempt; it is never sent in HTTP URLs/access logs. For a legacy local admin account, the Django command is still available:
 
 ```powershell
 docker compose exec backend python manage.py createsuperuser
@@ -77,6 +83,15 @@ Session flow:
 4. GET `auth/me/` reads the current identity. POST `auth/logout/` requires CSRF and clears the session.
 
 The Swagger forms explicitly expose `X-CSRFToken` for unsafe operations. Browser requests use the same localhost hostname throughout, so session cookies are shared across the proxy. Login attempts are throttled using the development process cache; production cache/rate-limit infrastructure belongs to the production milestone.
+
+| Method/path | Email authentication behavior |
+| --- | --- |
+| POST `auth/signup/` | `{email,password,display_name?}`; Django password validation, case-insensitive unique nonblank email, inactive new account |
+| POST `auth/verification/resend/` | `{email}`; generic response, 60-second resend cooldown, replaces the previous link |
+| POST `auth/verification/confirm/` | `{token}`; explicit action, 24-hour expiry, single use, activates account without automatic login |
+| POST `auth/login/` | `{email,password}`; verified new accounts only; legacy `{username,password}` remains compatible |
+
+Signup/resend return generic 202 `{detail,delivery_mode}` independent of whether the email exists. `delivery_mode=local` means file delivery, `smtp` means the configured SMTP backend; it does not claim account-specific delivery success. Raw verification tokens appear only in the email, while PostgreSQL stores their SHA-256 digests and destination email. Email changes invalidate an earlier destination's link. Existing username/admin accounts with blank email remain usable. New accounts use the email sign-in flow. Authentication is protected by IP, identity and global request limits; unknown/wrong/unverified sign-in failures share the same response.
 
 | Method/path | Owned resource |
 | --- | --- |
@@ -119,4 +134,4 @@ python scripts/api_smoke_check.py
 python scripts/smoke_check.py
 ```
 
-The database/API checkpoint covers the existing Analyze resource fields, read operations and owned preferences. Idea/Customer/Goal/Home frontend pages resume after review. CSV/manual imports, real providers, production deployment and authentication screens remain later work. The solar frontend remains available; its temporary Start selection behavior is unchanged.
+The checkpoint covers the existing Analyze resource fields, read operations and owned preferences, plus the Idea and email authentication screens. Start actions now navigate to Idea; its browser-local answers are not yet uploaded into authenticated workspaces. Customer/Goal/Home frontend pages resume after review. CSV/manual imports, password recovery, real providers, production deployment and production SMTP verification remain later work.

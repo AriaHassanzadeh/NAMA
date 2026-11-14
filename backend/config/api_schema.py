@@ -17,6 +17,15 @@ class UserIdentitySerializer(serializers.Serializer):
     id = serializers.IntegerField()
     username = serializers.CharField()
     display_name = serializers.CharField()
+    email = serializers.CharField(allow_blank=True)
+
+
+class AuthDetailSerializer(serializers.Serializer):
+    detail = serializers.CharField()
+
+
+class VerificationPendingSerializer(AuthDetailSerializer):
+    delivery_mode = serializers.ChoiceField(choices=["local", "smtp"])
 
 
 class SessionIdentitySerializer(serializers.Serializer):
@@ -101,6 +110,12 @@ def configure_api_schema():
     auth.LogoutView.serializer_class = SessionIdentitySerializer
     extend_schema_view(post=extend_schema(request=auth.LoginSerializer, responses={200: SessionLoginResponseSerializer}, description="Fetch /auth/csrf/ first and send X-CSRFToken. Django rotates the session/CSRF token on login."))(auth.LoginView)
     extend_schema_view(post=extend_schema(request=None, responses={204: None}))(auth.LogoutView)
+    auth.SignupView.serializer_class = auth.SignupSerializer
+    auth.VerificationResendView.serializer_class = auth.VerificationResendSerializer
+    auth.VerificationConfirmView.serializer_class = auth.VerificationConfirmSerializer
+    extend_schema_view(post=extend_schema(request=auth.SignupSerializer, responses={202: VerificationPendingSerializer}, description="Email/password signup. Verification is required for new accounts; response does not disclose whether the address already exists."))(auth.SignupView)
+    extend_schema_view(post=extend_schema(request=auth.VerificationResendSerializer, responses={202: VerificationPendingSerializer}, description="Generic response; a 60-second cooldown prevents repeated delivery. A newer email invalidates the older verification link."))(auth.VerificationResendView)
+    extend_schema_view(post=extend_schema(request=auth.VerificationConfirmSerializer, responses={200: AuthDetailSerializer, 400: AuthDetailSerializer}, description="Explicit POST activates an unverified signup. Single-use token expires after 24 hours. Verification does not log the user in."))(auth.VerificationConfirmView)
     EntryOptionsView.serializer_class = EntryOptionsResponseSerializer
     HealthView.serializer_class = HealthResponseSerializer
     extend_schema_view(get=extend_schema(responses={200: HealthResponseSerializer, 503: HealthResponseSerializer}))(HealthView)

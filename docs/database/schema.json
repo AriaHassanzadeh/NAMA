@@ -1,7 +1,119 @@
 {
   "engine": "postgresql",
-  "generated_at": "2026-11-12T09:48:47.248589+00:00",
+  "generated_at": "2026-11-14T10:17:01.207639+00:00",
   "tables": [
+    {
+      "name": "accounts_emailverification",
+      "columns": [
+        {
+          "name": "id",
+          "type": "int8",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 64,
+          "scale": 0,
+          "keys": [
+            "PK"
+          ],
+          "references": []
+        },
+        {
+          "name": "email",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 254,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "token_hash",
+          "type": "varchar",
+          "nullable": false,
+          "default": null,
+          "length": 64,
+          "precision": null,
+          "scale": null,
+          "keys": [
+            "UK"
+          ],
+          "references": []
+        },
+        {
+          "name": "sent_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "expires_at",
+          "type": "timestamptz",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "consumed_at",
+          "type": "timestamptz",
+          "nullable": true,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "user_id",
+          "type": "int8",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": 64,
+          "scale": 0,
+          "keys": [
+            "FK",
+            "UK"
+          ],
+          "references": [
+            {
+              "table": "accounts_user",
+              "column": "id"
+            }
+          ]
+        }
+      ],
+      "constraints": [
+        {
+          "name": "accounts_emailverification_pkey",
+          "definition": "PRIMARY KEY (id)"
+        },
+        {
+          "name": "accounts_emailverification_token_hash_key",
+          "definition": "UNIQUE (token_hash)"
+        },
+        {
+          "name": "accounts_emailverification_user_id_4f5b1661_fk_accounts_user_id",
+          "definition": "FOREIGN KEY (user_id) REFERENCES accounts_user(id) DEFERRABLE INITIALLY DEFERRED"
+        },
+        {
+          "name": "accounts_emailverification_user_id_key",
+          "definition": "UNIQUE (user_id)"
+        }
+      ]
+    },
     {
       "name": "accounts_user",
       "columns": [
@@ -123,6 +235,28 @@
           "name": "date_joined",
           "type": "timestamptz",
           "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "email_verification_required",
+          "type": "bool",
+          "nullable": false,
+          "default": null,
+          "length": null,
+          "precision": null,
+          "scale": null,
+          "keys": [],
+          "references": []
+        },
+        {
+          "name": "email_verified_at",
+          "type": "timestamptz",
+          "nullable": true,
           "default": null,
           "length": null,
           "precision": null,

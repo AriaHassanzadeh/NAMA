@@ -2,7 +2,7 @@
 
 Personal Market Analyzor project. Milestone 01 provides a local Next.js + Django + PostgreSQL development foundation and a Persian RTL connection-status screen.
 
-The solar entrance now opens the Idea page at `/start/idea` and includes **Sign in / Sign up**. Idea uses the labelled mock example API, validates and saves a browser-local draft, and preserves the entry theme and media source. Email/password signup requires email verification before sign-in. These pages form a review checkpoint: submitting Idea saves it; Customer, Goal and Analyze Home follow after review. The database contains labelled sample records; see [API documentation](docs/API.md) and [actual database diagrams/columns](docs/DATABASE.md). The supplied `reference/` files remain design handoff material.
+The solar entrance opens Idea at `/start/idea` and includes **Sign in / Sign up**. Submitting a valid Idea continues to Customer at `/start/customer`, where you can choose an audience or describe the customer, and optionally add an initial market and experiment budget. Both pages preserve browser-local drafts, theme and media source. Customer is the current review checkpoint: submitting saves its answers; Goal and Analyze Home follow after review. Idea examples use the labelled mock API; Customer choices are static form options. Email/password signup requires email verification before sign-in. See [API documentation](docs/API.md) and [actual database diagrams/columns](docs/DATABASE.md) for the labelled sample database. The supplied `reference/` files remain design handoff material.
 
 ## Requirements and versions
 
@@ -36,6 +36,7 @@ Open:
 
 - Application: http://localhost:3000/
 - Idea page: http://localhost:3000/start/idea
+- Customer page: http://localhost:3000/start/customer (requires a valid Idea draft)
 - Sign in: http://localhost:3000/auth/login/
 - Sign up: http://localhost:3000/auth/signup/
 - Email confirmation/resend: http://localhost:3000/auth/verify/
@@ -115,12 +116,13 @@ The browser check uses an installed Chrome plus Node's built-in WebSocket, with 
 node scripts/browser_check.mjs
 node scripts/landing_check.mjs
 node scripts/idea_check.mjs
+node scripts/customer_check.mjs
 node scripts/auth_check.mjs
 ```
 
-Set `CHROME_PATH` if Chrome is elsewhere. The health-screen check targets `/health/`; the landing check targets `/`; the Idea check covers the mock API states, draft recovery, validation, keyboard/IME input and storage failures at `/start/idea`. The auth check creates one isolated local test account and verifies signup, local email confirmation, protected sessions and sign-in. It uses `localhost` to match the verification origin, keeps credentials/private links out of diagnostics and leaves the test account available for inspection. Checks also cover RTL, fonts, responsive layout and motion preferences. Screenshots are saved outside the repository in the temporary directory printed by each script. If Next misses a newly added route on the Windows bind mount, run `docker compose restart frontend`.
+Set `CHROME_PATH` if Chrome is elsewhere. The health-screen check targets `/health/`; the landing check targets `/`; the Idea check covers the mock API states, draft recovery, validation, keyboard/IME input and storage failures at `/start/idea`. The Customer check covers the prior-Idea guard, audience/text alternatives, optional fields and navigation/persistence at `/start/customer`. The auth check creates one isolated local test account and verifies signup, local email confirmation, protected sessions and sign-in. It uses `localhost` to match the verification origin, keeps credentials/private links out of diagnostics and leaves the test account available for inspection. Checks also cover RTL, fonts, responsive layout and motion preferences. Screenshots are saved outside the repository in the temporary directory printed by each script. If Next misses a newly added route on the Windows bind mount, run `docker compose restart frontend`.
 
-Idea drafts use the existing `nama-analyze-entry-v1` browser storage key. No answer is sent in a URL or uploaded to Django at this checkpoint. When storage is blocked/full, the page explains that the draft only remains in the current tab; reload cannot restore that in-memory fallback.
+Idea and Customer drafts use the existing `nama-analyze-entry-v1` browser storage key. Customer preserves reference keys `customer`, `audience`, `market` and `budget`; later authenticated upload will map `customer` to Django's `customer_description` and `budget` to `budget_band`. No answer is sent in a URL or uploaded to Django at this checkpoint. When storage is blocked/full, the page explains that the draft only remains in the current tab; reload cannot restore that in-memory fallback. Direct Customer access waits for draft recovery, then redirects to Idea if its required answer is incomplete.
 
 ## VS Code and native tools
 

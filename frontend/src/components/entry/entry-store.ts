@@ -40,6 +40,11 @@ export function useEntryState(): Record<string, unknown> {
   return parseSnapshot(useSyncExternalStore(subscribe, getSnapshot, () => "{}"));
 }
 
+const subscribeHydration = () => () => {};
+export function useEntryReady(): boolean {
+  return useSyncExternalStore(subscribeHydration, () => true, () => false);
+}
+
 function getPersistenceSnapshot() {
   if (!canPersist) return false;
   try {

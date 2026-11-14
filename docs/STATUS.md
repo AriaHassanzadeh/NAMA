@@ -1,5 +1,45 @@
 # NAMA Analyze status
 
+## Customer page review checkpoint — 2026-11-14
+
+The user approved continuing after Idea. Following the agreed page-by-page review, this checkpoint implements Customer only. Branch: `work/frontend-customer`, based on the preserved Idea/auth checkpoint. Existing personal `.vscode/` settings remain untracked and untouched.
+
+- Start at http://localhost:3000/start/idea and submit a valid idea to enter http://localhost:3000/start/customer.
+- Direct Customer access waits for browser draft recovery, then returns to Idea if its answer is incomplete. Valid stored drafts survive reload; another tab invalidating Idea also returns Customer to Idea without deleting its answers.
+- Customer follows the reference title, description, audience cards, optional market/budget fields, shared NAMA logo/fonts, RTL and dark/light entry themes. Mobile uses normal vertical scrolling with no overlapping composer or horizontal page overflow.
+- Choose consumer/business/both or describe the customer with at least three trimmed characters. Cards expose selection state and support native keyboard activation; selecting a chosen card again clears it. Description maximum is 2000; optional market maximum is 100. Budget options and the clearly illustrative example match the reference.
+- Every edit persists immediately and invalidates the saved acknowledgement/local completion. Enter saves Customer; Shift+Enter adds a newline; IME Enter does not submit. Reload, progress/back navigation, source/theme preferences and manual workspace-name fields are preserved. Blocked storage uses the existing clearly labelled in-memory fallback.
+- Customer submit acknowledges saved answers and stays on Customer for review. Goal remains disabled; the complete project flow and Home are not claimed finished. Drafts remain browser-local, with no answer text in URLs. Existing Django auth and demo APIs continue to work.
+
+### Files changed
+
+- `frontend/src/app/start/customer/page.tsx`, `components/entry/customer-discovery.tsx`: real Customer route and form.
+- `components/entry/discovery-header.tsx`, `draft-validation.ts`: shared step navigation/theme controls and bounded form validation/options. `entry-store.ts` exposes hydration readiness so the route guard does not mistake the server's empty snapshot for a missing draft.
+- `components/entry/idea-discovery.tsx`: valid Idea submission now saves and navigates to Customer; edits invalidate Customer's saved acknowledgement while retaining its values. `idea-discovery.css` shares the entry layout and adds responsive Customer cards/fields.
+- `scripts/customer_check.mjs`, `scripts/idea_check.mjs`: actual Chrome behavior checks for the new page and changed continuation. `README.md`, `docs/API.md`, this status entry: current routes, local draft mapping and scope.
+
+No dependency installation, API contract or database migration was needed. Customer options are static form choices; Idea still uses the labelled mock example API. Future authenticated upload maps reference keys `customer` and `budget` to Django's existing `customer_description` and `budget_band`.
+
+### Checks that passed
+
+| Exact command/check | Actual result |
+| --- | --- |
+| `docker compose run --rm --no-deps frontend npm run lint` | Zero warnings/errors |
+| `docker compose run --rm --no-deps frontend npm run typecheck` | Passed |
+| `docker compose run --rm --no-deps frontend npm run build` | Passed; `/start/customer` generated alongside existing routes |
+| `docker compose build frontend` | Current frontend image built using cached locked dependencies |
+| `docker compose up -d --no-deps --wait frontend` | Frontend healthy; backend/database and persistent volume retained |
+| `npm.cmd --prefix frontend run typecheck` | Local editor route types regenerated; TypeScript passed |
+| `node scripts/customer_check.mjs` with `REFERENCE_ORIGIN=http://127.0.0.1:8766` | Guards, audience/text alternatives, example focus, keyboard/IME, optional fields, saved-state invalidation, reload/history/progress, manual-name preservation, real second-tab invalidation, malformed/blocked storage and reduced motion passed; no uncaught browser exceptions |
+| Customer viewports | Both themes at 1440x1000, 1280x900, 768x1024, 390x844 and 844x390; aligned RTL content, loaded fonts, no horizontal overflow or overlapping form sections |
+| `node scripts/idea_check.mjs` | Existing mock API/loading/error/retry/empty, validation, keyboard, persistence and layout cases passed with actual Customer continuation and return navigation |
+| `python scripts/smoke_check.py` | Direct/proxied real-database health and solar HTML/RTL/logo passed |
+| `git diff --check` | Passed |
+
+Rendered desktop/mobile Customer screenshots were visually compared with the supplied readable reference, including the scrolled mobile composer. Dark and light layouts were inspected. Artifacts outside Git: `C:\Users\Admin\AppData\Local\Temp\nama-analyze-customer-BlzG1U` and `C:\Users\Admin\AppData\Local\Temp\nama-analyze-idea-xu1TEe`. The reference was served temporarily for inspection only. No new UI/runtime blocker remains.
+
+**Next action:** user reviews Idea → Customer, saves/edits answers and checks mobile behavior. Implement Goal only after that review; authenticated project-brief upload and Home remain later parts of the entry milestone.
+
 ## Idea, email authentication and local restart — 2026-11-14
 
 The user approved resuming the frontend, then expanded this checkpoint to include a solar **Sign in / Sign up** button, login, signup and email verification. They selected email/password with a verification email. Work began on November 12; an automatic approval-service usage-limit failure prevented the final migration/check command from executing then. On November 14 the user requested another project run; Docker Desktop was stopped, so it was started in the background and the current stack was rebuilt and brought up successfully. This entry supersedes the older pending-frontend notes below.

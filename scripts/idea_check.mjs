@@ -65,6 +65,17 @@ async function waitForIdea() {
   await delay(150);
 }
 
+async function waitForCustomer() {
+  await waitFor(() => evaluate("location.pathname.replace(/\\/$/, '') === '/start/customer' && !!document.querySelector('#entryMarket')"), "Customer route and fields");
+  await evaluate("document.fonts.ready.then(() => true)");
+  await delay(150);
+}
+
+async function returnToIdea() {
+  await evaluate("document.querySelector('.entry-back').click()");
+  await waitForIdea();
+}
+
 async function fill(text) {
   await evaluate("document.querySelector('#entryAnswer').focus(); document.querySelector('#entryAnswer').select()");
   await send("Input.insertText", { text });
@@ -165,13 +176,15 @@ try {
   await delay(100);
   assert.equal(await evaluate(`JSON.parse(localStorage.getItem(${JSON.stringify(store)})).ideaSaved === true`), false, "IME Enter must not submit");
   await enter();
-  await waitFor(() => evaluate("document.querySelector('#entry-save-status')?.textContent.includes('ایده‌ات ذخیره شد.')"), "valid-idea acknowledgement");
+  await waitForCustomer();
+  assert.equal(await evaluate(`JSON.parse(localStorage.getItem(${JSON.stringify(store)})).ideaSaved`), true);
+  await returnToIdea();
   await waitFor(() => evaluate(`document.querySelector('#entryAnswer').value === JSON.parse(localStorage.getItem(${JSON.stringify(store)})).idea`), "normalized saved value displayed");
   assert.equal(await evaluate("location.pathname.replace(/\\/$/, '')"), "/start/idea");
   assert.equal(await evaluate("location.search"), "");
   const savedIdea = await evaluate("document.querySelector('#entryAnswer').value");
   assert.equal(await evaluate(`JSON.parse(localStorage.getItem(${JSON.stringify(store)})).ideaSaved`), true);
-  console.log("PASS trimmed minimum length, Enter submit, Shift+Enter newline and IME guard; no unimplemented route or answer URL");
+  console.log("PASS trimmed minimum length, Enter continues to Customer, Shift+Enter newline and IME guard; back restores Idea without answer URLs");
 
   await evaluate("document.querySelector('.theme-toggle').click()");
   await waitFor(() => evaluate("document.querySelector('.entry-discovery').dataset.theme === 'light'"), "light theme");
@@ -237,7 +250,9 @@ try {
   await waitFor(() => evaluate("!!document.querySelector('.entry-examples-error')"), "API error state");
   await fill("ورودی آزاد هنگام قطع مثال‌ها هم کار می‌کند");
   await enter();
-  await waitFor(() => evaluate("document.querySelector('#entry-save-status')?.textContent.includes('ایده‌ات ذخیره شد.')"), "save during API failure");
+  await waitForCustomer();
+  await returnToIdea();
+  await waitFor(() => evaluate("!!document.querySelector('.entry-examples-error')"), "example failure after returning from Customer");
   await screenshot("api-error");
   apiMode = "pass";
   await evaluate("document.querySelector('.entry-examples-retry').click()");
@@ -263,7 +278,9 @@ try {
   await waitForIdea();
   await fill("ایده با ذخیره‌سازی مسدود مرورگر");
   await enter();
-  await waitFor(() => evaluate("document.querySelector('#entry-save-status')?.textContent.includes('ایده‌ات در این تب ثبت شد.')"), "in-memory save without localStorage");
+  await waitForCustomer();
+  await returnToIdea();
+  await waitFor(() => evaluate("document.querySelector('#entryAnswer').value === 'ایده با ذخیره‌سازی مسدود مرورگر'"), "in-memory Idea survives Customer navigation");
   assert.equal(await evaluate("document.querySelector('.entry-footer-note').textContent.includes('فقط در این تب')"), true, "memory-only persistence is described honestly");
   await evaluate("document.querySelector('.entry-back').click()");
   await waitFor(() => evaluate("!!document.querySelector('.solar-portal')"), "memory-mode return to landing");
